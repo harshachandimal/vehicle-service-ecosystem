@@ -2,6 +2,7 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { PrismaService } from './common/prisma.service';
 import authRoutes from './modules/auth/auth.routes';
+import vehicleRoutes from './modules/vehicle/vehicle.routes';
 
 /**
  * Creates and configures the Express application
@@ -46,6 +47,7 @@ function configureRoutes(app: Application): void {
 
     // API routes
     app.use('/api/auth', authRoutes);
+    app.use('/api/vehicles', vehicleRoutes);
 }
 
 /**

@@ -20,13 +20,30 @@ enum UserRole {
 /// User model
 /// Represents all users in the system (both owners and providers)
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String   // Stored as hashed value
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String    // Stored as hashed value
   name      String
   role      UserRole
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  vehicles  Vehicle[] // One Owner -> Many Vehicles
 
   @@map("users")
+}
+
+/// Vehicle model
+/// Represents vehicles owned by users with OWNER role
+model Vehicle {
+  id           String   @id @default(uuid())
+  ownerId      String
+  make         String   // Manufacturer (e.g., Toyota)
+  model        String   // Model name
+  year         Int
+  licensePlate String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@map("vehicles")
 }
