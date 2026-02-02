@@ -1,0 +1,32 @@
+// Prisma schema for Vehicle Service Ecosystem
+// Defines database models and relationships
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// User role enumeration
+/// Defines available user types in the system
+enum UserRole {
+  OWNER    // Vehicle owner who requests services
+  PROVIDER // Service provider who offers services
+}
+
+/// User model
+/// Represents all users in the system (both owners and providers)
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // Stored as hashed value
+  name      String
+  role      UserRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
