@@ -17,17 +17,29 @@ enum UserRole {
   PROVIDER // Service provider who offers services
 }
 
+/// Booking status enumeration
+/// Represents the lifecycle states of a service booking
+enum BookingStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
 /// User model
 /// Represents all users in the system (both owners and providers)
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  password  String    // Stored as hashed value
-  name      String
-  role      UserRole
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  vehicles  Vehicle[] // One Owner -> Many Vehicles
+  id               String    @id @default(uuid())
+  email            String    @unique
+  password         String    // Stored as hashed value
+  name             String
+  role             UserRole
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  vehicles         Vehicle[] // One Owner -> Many Vehicles
+  providerBookings Booking[] // Bookings where user is provider
 
   @@map("users")
 }
@@ -35,15 +47,33 @@ model User {
 /// Vehicle model
 /// Represents vehicles owned by users with OWNER role
 model Vehicle {
-  id           String   @id @default(uuid())
+  id           String    @id @default(uuid())
   ownerId      String
-  make         String   // Manufacturer (e.g., Toyota)
-  model        String   // Model name
+  make         String    // Manufacturer (e.g., Toyota)
+  model        String    // Model name
   year         Int
-  licensePlate String   @unique
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  licensePlate String    @unique
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  owner        User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  bookings     Booking[] // Bookings for this vehicle
 
   @@map("vehicles")
+}
+
+/// Booking model
+/// Represents service bookings between owners and providers
+model Booking {
+  id          String        @id @default(uuid())
+  vehicleId   String
+  providerId  String
+  description String
+  serviceDate DateTime
+  status      BookingStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  vehicle     Vehicle       @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  provider    User          @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@map("bookings")
 }
