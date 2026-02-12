@@ -28,6 +28,14 @@ enum BookingStatus {
   CANCELLED
 }
 
+/// Service category enumeration
+/// Defines the type of service provider
+enum ServiceCategory {
+  GARAGE
+  CARRIER
+  DETAILER
+}
+
 /// User model
 /// Represents all users in the system (both owners and providers)
 model User {
@@ -38,8 +46,9 @@ model User {
   role             UserRole
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
-  vehicles         Vehicle[] // One Owner -> Many Vehicles
-  providerBookings Booking[] // Bookings where user is provider
+  vehicles         Vehicle[]        // One Owner -> Many Vehicles
+  providerBookings Booking[]        // Bookings where user is provider
+  providerProfile  ProviderProfile? // Provider's business profile
 
   @@map("users")
 }
@@ -76,4 +85,36 @@ model Booking {
   provider    User          @relation(fields: [providerId], references: [id], onDelete: Cascade)
 
   @@map("bookings")
+}
+
+/// Provider Profile model
+/// Represents business details of a service provider
+model ProviderProfile {
+  id           String          @id @default(uuid())
+  userId       String          @unique
+  businessName String
+  category     ServiceCategory
+  phone        String
+  address      String
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  services     ProviderService[] // One Provider -> Many Services
+
+  @@map("provider_profiles")
+}
+
+/// Provider Service model
+/// Represents individual service items in a provider's catalog
+model ProviderService {
+  id          String          @id @default(uuid())
+  profileId   String
+  name        String
+  price       Decimal         @db.Decimal(10, 2)
+  description String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  profile     ProviderProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("provider_services")
 }

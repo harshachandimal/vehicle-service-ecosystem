@@ -4,6 +4,7 @@ import { BookingService } from './booking.service';
 import { BookingRepository } from './booking.repository';
 import { CreateBookingDTO, UpdateStatusDTO } from '../../types/booking.types';
 
+// Initialize repositories and services Dependencies Inversion
 const bookingRepository = new BookingRepository();
 const bookingService = new BookingService(bookingRepository);
 
