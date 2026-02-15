@@ -5,6 +5,7 @@ import authRoutes from './modules/auth/auth.routes';
 import vehicleRoutes from './modules/vehicle/vehicle.routes';
 import bookingRoutes from './modules/booking/booking.routes';
 import providerRoutes from './modules/provider/provider.routes';
+import invoiceRoutes from './modules/invoice/invoice.routes';
 
 /**
  * Creates and configures the Express application
@@ -52,6 +53,7 @@ function configureRoutes(app: Application): void {
     app.use('/api/vehicles', vehicleRoutes);
     app.use('/api/bookings', bookingRoutes);
     app.use('/api/providers', providerRoutes);
+    app.use('/api/invoices', invoiceRoutes);
 }
 
 /**

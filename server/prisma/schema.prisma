@@ -36,6 +36,13 @@ enum ServiceCategory {
   DETAILER
 }
 
+/// Invoice status enumeration
+/// Represents the payment status of an invoice
+enum InvoiceStatus {
+  UNPAID
+  PAID
+}
+
 /// User model
 /// Represents all users in the system (both owners and providers)
 model User {
@@ -83,6 +90,7 @@ model Booking {
   updatedAt   DateTime      @updatedAt
   vehicle     Vehicle       @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
   provider    User          @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  invoice     Invoice?      // One-to-one relationship with Invoice
 
   @@map("bookings")
 }
@@ -118,3 +126,19 @@ model ProviderService {
 
   @@map("provider_services")
 }
+
+/// Invoice model
+/// Represents billing documents for completed bookings
+model Invoice {
+  id        String        @id @default(uuid())
+  bookingId String        @unique // One-to-one constraint
+  amount    Decimal       @db.Decimal(10, 2)
+  status    InvoiceStatus @default(UNPAID)
+  items     Json          // JSONB column for price snapshot
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  booking   Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@map("invoices")
+}
+
