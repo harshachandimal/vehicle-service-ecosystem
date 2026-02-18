@@ -1,6 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Car, Store } from 'lucide-react';
 
+/**
+ * Dual call-to-action component for vehicle owners and service providers
+ * @returns DualCTA component
+ */
 export default function DualCTA() {
     return (
         <section className="py-20 px-6">

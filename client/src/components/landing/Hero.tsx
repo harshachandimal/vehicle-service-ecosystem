@@ -1,5 +1,9 @@
 import { Search } from 'lucide-react';
 
+/**
+ * Hero section component for the landing page
+ * @returns Hero component with search functionality
+ */
 export default function Hero() {
     return (
         <section className="relative bg-gradient-to-br from-dark via-primary/90 to-dark min-h-[600px] flex items-center px-6 py-20">

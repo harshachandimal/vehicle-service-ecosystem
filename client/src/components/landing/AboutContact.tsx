@@ -1,6 +1,10 @@
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { useState } from 'react';
 
+/**
+ * About and contact section component with contact form
+ * @returns AboutContact component
+ */
 export default function AboutContact() {
     const [formData, setFormData] = useState({ name: '', phone: '', email: '', message: '' });
 

@@ -1,5 +1,8 @@
 import { UserPlus, Search, CheckCircle } from 'lucide-react';
 
+/**
+ * Step-by-step process flow data
+ */
 const steps = [
     {
         icon: UserPlus,
@@ -21,6 +24,10 @@ const steps = [
     },
 ];
 
+/**
+ * Process flow component showing how to use the platform
+ * @returns ProcessFlow component
+ */
 export default function ProcessFlow() {
     return (
         <section className="py-20 px-6 bg-white">

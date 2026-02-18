@@ -1,5 +1,8 @@
 import { Wrench, Car, Droplet, Settings, Sparkles, Gauge } from 'lucide-react';
 
+/**
+ * Service categories with icons and colors
+ */
 const categories = [
     { icon: Wrench, title: 'General Repairs', color: 'bg-blue-500' },
     { icon: Car, title: 'Full Service', color: 'bg-green-500' },
@@ -9,6 +12,10 @@ const categories = [
     { icon: Gauge, title: 'Diagnostics', color: 'bg-orange-500' },
 ];
 
+/**
+ * Service category grid component displaying available service types
+ * @returns CategoryGrid component
+ */
 export default function CategoryGrid() {
     return (
         <section className="py-20 px-6 bg-silver">

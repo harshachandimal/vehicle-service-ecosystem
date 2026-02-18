@@ -1,11 +1,17 @@
 import { Link } from 'react-router-dom';
 
+/**
+ * Footer component with links to services, company info, and legal pages
+ * @returns Footer component
+ */
 export default function Footer() {
     return (
         <footer className="bg-slate-900 text-white py-12 px-6">
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
-                    <h3 className="text-xl font-bold mb-4 text-primary">AutoFix</h3>
+                    <h3 className="text-xl font-bold mb-4 text-primary">
+                        Auto<span className="text-black">Fix</span>
+                    </h3>
                     <p className="text-sm text-gray-300 leading-relaxed">
                         Sri Lanka's premier vehicle service platform connecting owners with verified professionals.
                     </p>
