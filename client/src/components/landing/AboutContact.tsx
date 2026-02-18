@@ -9,11 +9,11 @@ export default function AboutContact() {
     const [formData, setFormData] = useState({ name: '', phone: '', email: '', message: '' });
 
     return (
-        <section className="py-20 px-6 bg-silver">
+        <section className="py-20 px-6 bg-black/30">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl font-bold text-dark mb-4">What is AutoFix?</h2>
-                    <p className="text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    <h2 className="text-4xl font-bold text-white mb-4">What is AutoFix?</h2>
+                    <p className="text-white/70 max-w-3xl mx-auto leading-relaxed">
                         AutoFix connects vehicle owners with trusted service providers across Sri Lanka.
                         Our mission is to make vehicle maintenance simple, transparent, and reliable for everyone in our community.
                     </p>
@@ -22,28 +22,28 @@ export default function AboutContact() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
                     <div className="space-y-6">
                         <div className="glass p-6 rounded-2xl">
-                            <h3 className="text-xl font-bold text-dark mb-2 flex items-center gap-2">
-                                <span className="w-2 h-2 bg-primary rounded-full"></span>
+                            <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                                <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
                                 Our Mission
                             </h3>
-                            <p className="text-gray-600 leading-relaxed">
+                            <p className="text-white/70 leading-relaxed">
                                 To revolutionize how vehicle servicing works in Sri Lanka by connecting owners with quality providers.
                             </p>
                         </div>
 
                         <div className="glass p-6 rounded-2xl">
-                            <h3 className="text-xl font-bold text-dark mb-4">Get in Touch</h3>
+                            <h3 className="text-xl font-bold text-white mb-4">Get in Touch</h3>
                             <div className="space-y-3">
-                                <div className="flex items-center gap-3 text-gray-700">
-                                    <Mail size={20} className="text-primary" />
+                                <div className="flex items-center gap-3 text-white/80">
+                                    <Mail size={20} className="text-blue-400" />
                                     <span>autofix@email.com</span>
                                 </div>
-                                <div className="flex items-center gap-3 text-gray-700">
-                                    <Phone size={20} className="text-primary" />
+                                <div className="flex items-center gap-3 text-white/80">
+                                    <Phone size={20} className="text-blue-400" />
                                     <span>+94 77 123 4567</span>
                                 </div>
-                                <div className="flex items-center gap-3 text-gray-700">
-                                    <MapPin size={20} className="text-primary" />
+                                <div className="flex items-center gap-3 text-white/80">
+                                    <MapPin size={20} className="text-blue-400" />
                                     <span>Colombo, Sri Lanka</span>
                                 </div>
                             </div>
@@ -51,12 +51,12 @@ export default function AboutContact() {
                     </div>
 
                     <div className="glass p-8 rounded-2xl">
-                        <h3 className="text-2xl font-bold text-dark mb-6">Send us a Message</h3>
+                        <h3 className="text-2xl font-bold text-white mb-6">Send us a Message</h3>
                         <form className="space-y-4">
                             <input
                                 type="text"
                                 placeholder="Full Name *"
-                                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-200 focus:border-primary outline-none transition"
+                                className="w-full px-4 py-3 bg-white/10 text-white placeholder:text-white/50 rounded-lg border border-white/20 focus:border-white/60 outline-none transition backdrop-blur-sm"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             />
@@ -64,14 +64,14 @@ export default function AboutContact() {
                                 <input
                                     type="tel"
                                     placeholder="Phone Number"
-                                    className="px-4 py-3 bg-white rounded-lg border border-gray-200 focus:border-primary outline-none transition"
+                                    className="px-4 py-3 bg-white/10 text-white placeholder:text-white/50 rounded-lg border border-white/20 focus:border-white/60 outline-none transition backdrop-blur-sm"
                                     value={formData.phone}
                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                 />
                                 <input
                                     type="email"
                                     placeholder="Email Address *"
-                                    className="px-4 py-3 bg-white rounded-lg border border-gray-200 focus:border-primary outline-none transition"
+                                    className="px-4 py-3 bg-white/10 text-white placeholder:text-white/50 rounded-lg border border-white/20 focus:border-white/60 outline-none transition backdrop-blur-sm"
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 />
@@ -79,7 +79,7 @@ export default function AboutContact() {
                             <textarea
                                 placeholder="Message *"
                                 rows={4}
-                                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-200 focus:border-primary outline-none transition resize-none"
+                                className="w-full px-4 py-3 bg-white/10 text-white placeholder:text-white/50 rounded-lg border border-white/20 focus:border-white/60 outline-none transition resize-none backdrop-blur-sm"
                                 value={formData.message}
                                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                             ></textarea>

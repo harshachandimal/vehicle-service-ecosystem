@@ -18,12 +18,12 @@ const categories = [
  */
 export default function CategoryGrid() {
     return (
-        <section className="py-20 px-6 bg-silver">
+        <section className="py-20 px-6 bg-transparent">
             <div className="max-w-7xl mx-auto">
-                <h2 className="text-4xl font-bold text-center text-dark mb-4">
+                <h2 className="text-4xl font-bold text-center text-white mb-4">
                     Available Service Categories
                 </h2>
-                <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+                <p className="text-center text-white/70 mb-12 max-w-2xl mx-auto">
                     Browse through our wide range of automotive services tailored for every need.
                 </p>
 
@@ -36,8 +36,8 @@ export default function CategoryGrid() {
                             <div className={`${color} w-16 h-16 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                                 <Icon className="text-white" size={32} />
                             </div>
-                            <h3 className="text-xl font-bold text-dark mb-2">{title}</h3>
-                            <p className="text-gray-600 text-sm">
+                            <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+                            <p className="text-white/70 text-sm">
                                 Professional {title.toLowerCase()} services from verified providers.
                             </p>
                         </div>

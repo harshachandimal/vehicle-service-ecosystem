@@ -30,10 +30,10 @@ const steps = [
  */
 export default function ProcessFlow() {
     return (
-        <section className="py-20 px-6 bg-white">
+        <section className="py-20 px-6 bg-black/30">
             <div className="max-w-7xl mx-auto text-center">
-                <h2 className="text-4xl font-bold text-dark mb-4">How to Use AutoFix</h2>
-                <p className="text-gray-600 mb-16 max-w-2xl mx-auto">
+                <h2 className="text-4xl font-bold text-white mb-4">How to Use AutoFix</h2>
+                <p className="text-white/70 mb-16 max-w-2xl mx-auto">
                     Getting the service you need is simple and straightforward.
                 </p>
 
@@ -43,11 +43,11 @@ export default function ProcessFlow() {
                             <div className={`${color} w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl`}>
                                 <Icon className="text-white" size={40} />
                             </div>
-                            <h3 className="text-2xl font-bold text-dark mb-3">{title}</h3>
-                            <p className="text-gray-600 leading-relaxed">{desc}</p>
+                            <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
+                            <p className="text-white/70 leading-relaxed">{desc}</p>
 
                             {idx < steps.length - 1 && (
-                                <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-primary/50 to-transparent -translate-x-1/2"></div>
+                                <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-white/30 to-transparent -translate-x-1/2"></div>
                             )}
                         </div>
                     ))}

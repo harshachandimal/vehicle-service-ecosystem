@@ -6,8 +6,7 @@ import { Search } from 'lucide-react';
  */
 export default function Hero() {
     return (
-        <section className="relative bg-gradient-to-br from-dark via-primary/90 to-dark min-h-[600px] flex items-center px-6 py-20">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=1920')] opacity-10 bg-cover bg-center"></div>
+        <section className="relative bg-transparent min-h-[600px] flex items-center px-6 py-20">
 
             <div className="max-w-7xl mx-auto relative z-10 text-center fade-in-up">
                 <div className="inline-block mb-4 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white/90 text-sm font-medium">

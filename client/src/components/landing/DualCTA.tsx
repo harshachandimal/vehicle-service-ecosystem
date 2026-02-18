@@ -7,9 +7,9 @@ import { Car, Store } from 'lucide-react';
  */
 export default function DualCTA() {
     return (
-        <section className="py-20 px-6">
+        <section className="py-20 px-6 bg-transparent">
             <div className="max-w-7xl mx-auto">
-                <h2 className="text-4xl font-bold text-center text-dark mb-16">
+                <h2 className="text-4xl font-bold text-center text-white mb-16">
                     Ready to Experience the Difference?
                 </h2>
 
@@ -28,15 +28,15 @@ export default function DualCTA() {
                         </div>
                     </div>
 
-                    <div className="bg-white border-2 border-primary text-primary rounded-3xl p-12 relative overflow-hidden group hover:scale-105 transition-transform duration-300">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="glass text-white rounded-3xl p-12 relative overflow-hidden group hover:scale-105 transition-transform duration-300">
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <div className="relative z-10">
                             <Store size={48} className="mb-6" />
                             <h3 className="text-3xl font-bold mb-4">For Service Providers</h3>
-                            <p className="text-dark/80 mb-8 leading-relaxed">
+                            <p className="text-white/80 mb-8 leading-relaxed">
                                 Grow your business and connect with customers. Join our platform and expand your reach across Sri Lanka.
                             </p>
-                            <Link to="/register?role=provider" className="inline-block px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-all shadow-xl">
+                            <Link to="/register?role=provider" className="inline-block px-8 py-4 bg-white text-primary font-bold rounded-xl hover:bg-silver transition-all shadow-xl">
                                 Join as Provider
                             </Link>
                         </div>
