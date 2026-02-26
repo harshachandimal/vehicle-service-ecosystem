@@ -40,7 +40,7 @@ export default function LoginPage() {
             await login(formData);
             navigate('/');
         } catch (error: any) {
-            setErrors({ general: error.response?.data?.message || 'Login failed. Please try again.' });
+            setErrors({ general: error.response?.data?.error || error.message || 'Login failed. Please try again.' });
         } finally {
             setLoading(false);
         }

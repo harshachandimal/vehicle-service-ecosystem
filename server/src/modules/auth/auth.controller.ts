@@ -1,24 +1,21 @@
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { UserRepository } from '../user/user.repository';
-import { RegisterCredentials, LoginCredentials } from '../../types/auth.types';
+import { RegisterCredentials, BusinessRegisterCredentials, LoginCredentials } from '../../types/auth.types';
 
 /** Instantiate dependencies following DIP */
 const userRepository = new UserRepository();
 const authService = new AuthService(userRepository);
 
 /**
- * Handle user registration
- * 
- * @param {Request} req - Express request object
- * @param {Response} res - Express response object
- * @returns {Promise<void>}
+ * Handle customer registration (creates User only)
+ * @param {Request} req - Express request
+ * @param {Response} res - Express response
  */
 export async function registerHandler(req: Request, res: Response): Promise<void> {
     try {
         const credentials: RegisterCredentials = req.body;
 
-        // Validate required fields
         if (!credentials.email || !credentials.password || !credentials.name || !credentials.role) {
             res.status(400).json({ error: 'Missing required fields' });
             return;
@@ -33,17 +30,37 @@ export async function registerHandler(req: Request, res: Response): Promise<void
 }
 
 /**
+ * Handle business registration (creates User + ProviderProfile atomically)
+ * @param {Request} req - Express request
+ * @param {Response} res - Express response
+ */
+export async function registerBusinessHandler(req: Request, res: Response): Promise<void> {
+    try {
+        const credentials: BusinessRegisterCredentials = req.body;
+
+        if (!credentials.email || !credentials.password || !credentials.name
+            || !credentials.businessName || !credentials.category) {
+            res.status(400).json({ error: 'Missing required fields' });
+            return;
+        }
+
+        const result = await authService.registerBusiness(credentials);
+        res.status(201).json(result);
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Registration failed';
+        res.status(400).json({ error: message });
+    }
+}
+
+/**
  * Handle user login
- * 
- * @param {Request} req - Express request object
- * @param {Response} res - Express response object
- * @returns {Promise<void>}
+ * @param {Request} req - Express request
+ * @param {Response} res - Express response
  */
 export async function loginHandler(req: Request, res: Response): Promise<void> {
     try {
         const credentials: LoginCredentials = req.body;
 
-        // Validate required fields
         if (!credentials.email || !credentials.password) {
             res.status(400).json({ error: 'Email and password are required' });
             return;

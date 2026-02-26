@@ -12,6 +12,7 @@ interface EssentialInfoSectionProps {
         phone: string;
         password: string;
         confirmPassword: string;
+        category: string;
     };
     /** Form validation errors */
     errors: Record<string, string>;
@@ -40,6 +41,23 @@ export default function EssentialInfoSection({ formData, errors, onChange }: Ess
                 error={errors.businessName}
                 required
             />
+
+            <div>
+                <label className="block text-sm font-medium text-dark mb-2">
+                    Service Category <span className="text-red-500">*</span>
+                </label>
+                <select
+                    className="w-full px-4 py-3 bg-white rounded-lg border border-gray-200 focus:border-primary outline-none"
+                    value={formData.category}
+                    onChange={(e) => onChange('category', e.target.value)}
+                >
+                    <option value="">Select your business type</option>
+                    <option value="GARAGE">🔧 Garage / Auto Repair</option>
+                    <option value="CARRIER">🚛 Carrier / Towing</option>
+                    <option value="DETAILER">✨ Detailer / Car Wash</option>
+                </select>
+                {errors.category && <p className="text-sm text-red-600 mt-1">{errors.category}</p>}
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
                 <Input

@@ -45,6 +45,9 @@ export class UserRepository {
                 password: data.password,
                 name: data.name,
                 role: data.role as PrismaUserRole,
+                phone: data.phone,
+                district: data.district,
+                city: data.city,
             },
         });
         return this.mapToUserWithoutPassword(user);

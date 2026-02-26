@@ -40,6 +40,12 @@ export interface CreateUserDTO {
     name: string;
     /** User's role */
     role: UserRole;
+    /** Optional phone number */
+    phone?: string;
+    /** Optional district/region */
+    district?: string;
+    /** Optional city */
+    city?: string;
 }
 
 /**

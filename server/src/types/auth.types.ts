@@ -37,6 +37,41 @@ export interface RegisterCredentials {
     name: string;
     /** User's role in the system */
     role: UserRole;
+    /** Optional phone number */
+    phone?: string;
+    /** Optional district/region */
+    district?: string;
+    /** Optional city */
+    city?: string;
+}
+
+/**
+ * Business registration credentials
+ * Data required for registering a service provider (creates User + ProviderProfile)
+ */
+export interface BusinessRegisterCredentials {
+    /** Business email address */
+    email: string;
+    /** Password */
+    password: string;
+    /** Business name (stored as user.name) */
+    name: string;
+    /** Business phone number */
+    phone?: string;
+    /** Business district */
+    district?: string;
+    /** Business city */
+    city?: string;
+    /** Business display name for the profile */
+    businessName: string;
+    /** Service category */
+    category: 'GARAGE' | 'CARRIER' | 'DETAILER';
+    /** Street-level address */
+    streetAddress?: string;
+    /** Optional description */
+    businessDescription?: string;
+    /** Optional BR number */
+    registrationNumber?: string;
 }
 
 /**

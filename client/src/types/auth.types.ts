@@ -50,8 +50,8 @@ export interface RegisterRequest {
 export interface BusinessRegisterRequest extends RegisterRequest {
     /** Business name */
     businessName: string;
-    /** Optional service coverage radius */
-    serviceRadius?: string;
+    /** Service category */
+    category: 'GARAGE' | 'CARRIER' | 'DETAILER';
     /** Optional street address */
     streetAddress?: string;
     /** Optional business description */

@@ -54,7 +54,7 @@ export default function RegisterPage() {
             await register({ ...formData, role: 'OWNER' });
             navigate('/');
         } catch (error: any) {
-            setErrors({ general: error.response?.data?.message || 'Registration failed' });
+            setErrors({ general: error.response?.data?.error || error.message || 'Registration failed' });
         } finally {
             setLoading(false);
         }

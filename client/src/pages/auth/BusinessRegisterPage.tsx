@@ -16,7 +16,7 @@ export default function BusinessRegisterPage() {
     const { registerBusiness } = useAuth();
     const [formData, setFormData] = useState({
         businessName: '', email: '', phone: '', password: '', confirmPassword: '',
-        district: '', city: '', streetAddress: '', serviceRadius: '',
+        district: '', city: '', streetAddress: '', category: '' as 'GARAGE' | 'CARRIER' | 'DETAILER' | '',
         businessDescription: '', registrationNumber: '', agreeToTerms: false,
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -65,14 +65,14 @@ export default function BusinessRegisterPage() {
                 city: formData.city,
                 role: 'PROVIDER',
                 businessName: formData.businessName,
-                serviceRadius: formData.serviceRadius,
+                category: formData.category as 'GARAGE' | 'CARRIER' | 'DETAILER',
                 streetAddress: formData.streetAddress,
                 businessDescription: formData.businessDescription,
                 registrationNumber: formData.registrationNumber,
             });
             navigate('/');
         } catch (error: any) {
-            setErrors({ general: error.response?.data?.message || 'Registration failed' });
+            setErrors({ general: error.response?.data?.error || error.message || 'Registration failed' });
         } finally {
             setLoading(false);
         }

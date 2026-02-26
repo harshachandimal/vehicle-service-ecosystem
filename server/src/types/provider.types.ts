@@ -20,8 +20,11 @@ export interface ProviderProfile {
     userId: string;
     businessName: string;
     category: ServiceCategory;
-    phone: string;
-    address: string;
+    streetAddress: string;
+    district: string;
+    city: string;
+    businessDescription?: string;
+    registrationNumber?: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -55,8 +58,11 @@ export interface CreateServiceItemDTO {
 export interface UpdateProviderProfileDTO {
     businessName?: string;
     category?: ServiceCategory;
-    phone?: string;
-    address?: string;
+    streetAddress?: string;
+    district?: string;
+    city?: string;
+    businessDescription?: string;
+    registrationNumber?: string;
 }
 
 /**

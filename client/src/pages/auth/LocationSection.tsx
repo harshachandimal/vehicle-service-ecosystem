@@ -12,7 +12,6 @@ interface LocationSectionProps {
         district: string;
         city: string;
         streetAddress: string;
-        serviceRadius: string;
     };
     /** Field change handler */
     onChange: (field: string, value: string) => void;
@@ -66,12 +65,6 @@ export default function LocationSection({ formData, onChange }: LocationSectionP
                 onChange={(e) => onChange('streetAddress', e.target.value)}
             />
 
-            <Input
-                label="Service Radius (km)"
-                placeholder="Ex: 15"
-                value={formData.serviceRadius}
-                onChange={(e) => onChange('serviceRadius', e.target.value)}
-            />
         </div>
     );
 }

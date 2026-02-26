@@ -1,19 +1,24 @@
+import { PrismaService } from '../../common/prisma.service';
 import { UserRepository } from '../user/user.repository';
-import { RegisterCredentials, LoginCredentials, AuthResponse } from '../../types/auth.types';
+import {
+    RegisterCredentials,
+    BusinessRegisterCredentials,
+    LoginCredentials,
+    AuthResponse,
+} from '../../types/auth.types';
 import { hashPassword, comparePassword } from '../../utils/password.util';
 import { generateToken } from '../../utils/jwt.util';
+import { ServiceCategory } from '@prisma/client';
 
 /**
  * Authentication Service
  * Handles business logic for user authentication
- * Implements Dependency Inversion Principle by receiving repository via constructor
  */
 export class AuthService {
     private userRepository: UserRepository;
+    private prisma = PrismaService.getInstance();
 
     /**
-     * Create a new AuthService instance
-     * 
      * @param {UserRepository} userRepository - The user repository for data access
      */
     constructor(userRepository: UserRepository) {
@@ -21,71 +26,95 @@ export class AuthService {
     }
 
     /**
-     * Register a new user
-     * Validates role, checks for existing user, hashes password, and creates user
-     * 
+     * Register a new customer (OWNER role)
      * @param {RegisterCredentials} credentials - Registration data
-     * @returns {Promise<AuthResponse>} Token and user data on success
-     * @throws {Error} If email already exists or role is invalid
+     * @returns {Promise<AuthResponse>} Token and user data
      */
     async register(credentials: RegisterCredentials): Promise<AuthResponse> {
-        const { email, password, name, role } = credentials;
+        const { email, password, name, role, phone, district, city } = credentials;
 
-        // Check if user already exists
         const existingUser = await this.userRepository.findByEmail(email);
-        if (existingUser) {
-            throw new Error('User with this email already exists');
-        }
+        if (existingUser) throw new Error('User with this email already exists');
 
-        // Validate role
         if (role !== 'OWNER' && role !== 'PROVIDER') {
             throw new Error('Invalid role. Must be OWNER or PROVIDER');
         }
 
-        // Hash password and create user
         const hashedPassword = await hashPassword(password);
         const user = await this.userRepository.createUser({
-            email, password: hashedPassword, name, role,
+            email, password: hashedPassword, name, role, phone, district, city,
         });
 
-        // Generate token
         const token = generateToken({ userId: user.id, email: user.email, role: user.role });
+        return { token, user: { id: user.id, email: user.email, name: user.name, role: user.role as any } };
+    }
 
-        return {
-            token,
-            user: { id: user.id, email: user.email, name: user.name, role: user.role },
-        };
+    /**
+     * Register a new service provider
+     * Creates a User record and a linked ProviderProfile atomically.
+     * @param {BusinessRegisterCredentials} credentials - Business registration data
+     * @returns {Promise<AuthResponse>} Token and user data
+     */
+    async registerBusiness(credentials: BusinessRegisterCredentials): Promise<AuthResponse> {
+        const {
+            email, password, name, phone, district, city,
+            businessName, category, streetAddress, businessDescription, registrationNumber,
+        } = credentials;
+
+        const existingUser = await this.userRepository.findByEmail(email);
+        if (existingUser) throw new Error('User with this email already exists');
+
+        const hashedPassword = await hashPassword(password);
+
+        // Wrap both inserts in a transaction so neither persists if the other fails
+        const user = await this.prisma.$transaction(async (tx) => {
+            const newUser = await tx.user.create({
+                data: {
+                    email,
+                    password: hashedPassword,
+                    name,
+                    role: 'PROVIDER',
+                    phone,
+                    district,
+                    city,
+                },
+            });
+
+            await tx.providerProfile.create({
+                data: {
+                    userId: newUser.id,
+                    businessName,
+                    category: category as ServiceCategory,
+                    streetAddress: streetAddress ?? '',
+                    district: district ?? '',
+                    city: city ?? '',
+                    businessDescription,
+                    registrationNumber,
+                },
+            });
+
+            return newUser;
+        });
+
+        const token = generateToken({ userId: user.id, email: user.email, role: user.role as any });
+        return { token, user: { id: user.id, email: user.email, name: user.name, role: user.role as any } };
     }
 
     /**
      * Login an existing user
-     * Validates credentials and returns token with user data
-     * 
      * @param {LoginCredentials} credentials - Login credentials
-     * @returns {Promise<AuthResponse>} Token and user data on success
-     * @throws {Error} If credentials are invalid
+     * @returns {Promise<AuthResponse>} Token and user data
      */
     async login(credentials: LoginCredentials): Promise<AuthResponse> {
         const { email, password } = credentials;
 
-        // Find user by email
         const user = await this.userRepository.findByEmail(email);
-        if (!user) {
-            throw new Error('Invalid email or password');
-        }
+        if (!user) throw new Error('Invalid email or password');
 
-        // Verify password
         const isValidPassword = await comparePassword(password, user.password);
-        if (!isValidPassword) {
-            throw new Error('Invalid email or password');
-        }
+        if (!isValidPassword) throw new Error('Invalid email or password');
 
-        // Generate token
         const token = generateToken({ userId: user.id, email: user.email, role: user.role });
-
-        return {
-            token,
-            user: { id: user.id, email: user.email, name: user.name, role: user.role },
-        };
+        return { token, user: { id: user.id, email: user.email, name: user.name, role: user.role } };
     }
 }

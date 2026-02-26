@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { registerHandler, loginHandler } from './auth.controller';
+import { registerHandler, registerBusinessHandler, loginHandler } from './auth.controller';
 
 /**
  * Authentication Routes
@@ -9,19 +9,22 @@ const authRoutes = Router();
 
 /**
  * POST /auth/register
- * Register a new user
- * 
+ * Register a new customer (OWNER role)
  * @body {RegisterCredentials} - email, password, name, role
- * @returns {AuthResponse} - token and user data
  */
 authRoutes.post('/register', registerHandler);
 
 /**
+ * POST /auth/register-business
+ * Register a new service provider (creates User + ProviderProfile atomically)
+ * @body {BusinessRegisterCredentials} - email, password, name, businessName, category, ...
+ */
+authRoutes.post('/register-business', registerBusinessHandler);
+
+/**
  * POST /auth/login
  * Login an existing user
- * 
  * @body {LoginCredentials} - email, password
- * @returns {AuthResponse} - token and user data
  */
 authRoutes.post('/login', loginHandler);
 

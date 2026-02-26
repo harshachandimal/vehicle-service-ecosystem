@@ -51,6 +51,9 @@ model User {
   password         String    // Stored as hashed value
   name             String
   role             UserRole
+  phone            String?   // Optional contact number
+  district         String?   // Optional district/region
+  city             String?   // Optional city
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   vehicles         Vehicle[]        // One Owner -> Many Vehicles
@@ -98,16 +101,19 @@ model Booking {
 /// Provider Profile model
 /// Represents business details of a service provider
 model ProviderProfile {
-  id           String          @id @default(uuid())
-  userId       String          @unique
-  businessName String
-  category     ServiceCategory
-  phone        String
-  address      String
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
-  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  services     ProviderService[] // One Provider -> Many Services
+  id                  String          @id @default(uuid())
+  userId              String          @unique
+  businessName        String
+  category            ServiceCategory
+  streetAddress       String          // Street-level address
+  district            String          // District/region
+  city                String          // City
+  businessDescription String?         // Optional business description
+  registrationNumber  String?         // Optional BR number
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  user                User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  services            ProviderService[] // One Provider -> Many Services
 
   @@map("provider_profiles")
 }

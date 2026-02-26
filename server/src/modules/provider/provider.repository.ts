@@ -35,8 +35,11 @@ export class ProviderRepository {
                 userId,
                 businessName: data.businessName!,
                 category: data.category!,
-                phone: data.phone!,
-                address: data.address!,
+                streetAddress: data.streetAddress ?? '',
+                district: data.district ?? '',
+                city: data.city ?? '',
+                businessDescription: data.businessDescription,
+                registrationNumber: data.registrationNumber,
             },
         });
     }

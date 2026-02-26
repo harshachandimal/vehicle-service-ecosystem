@@ -33,7 +33,7 @@ export const authApi = {
      * @returns Promise resolving to authentication response with token and user data
      */
     login: async (data: LoginRequest): Promise<AuthResponse> => {
-        const response = await api.post<AuthResponse>('/auth/login', data);
+        const response = await api.post<AuthResponse>('/api/auth/login', data);
         return response.data;
     },
 
@@ -43,7 +43,7 @@ export const authApi = {
      * @returns Promise resolving to authentication response with token and user data
      */
     register: async (data: RegisterRequest): Promise<AuthResponse> => {
-        const response = await api.post<AuthResponse>('/auth/register', data);
+        const response = await api.post<AuthResponse>('/api/auth/register', data);
         return response.data;
     },
 
@@ -53,7 +53,7 @@ export const authApi = {
      * @returns Promise resolving to authentication response with token and user data
      */
     registerBusiness: async (data: BusinessRegisterRequest): Promise<AuthResponse> => {
-        const response = await api.post<AuthResponse>('/auth/register', data);
+        const response = await api.post<AuthResponse>('/api/auth/register-business', data);
         return response.data;
     },
 
