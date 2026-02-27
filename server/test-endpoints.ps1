@@ -144,6 +144,51 @@ if (-not $ownerToken) { Write-Host "  [WARN] Owner token missing" -ForegroundCol
 if (-not $providerToken) { Write-Host "  [WARN] Provider token missing" -ForegroundColor Yellow }
 
 # -----------------------------------------------
+Write-Header "2b. Auth - Forgot & Reset Password"
+# -----------------------------------------------
+
+$resetResult = Invoke-Test -Name "POST /api/auth/forgot-password (valid email)" `
+    -Method POST `
+    -Url "$BaseUrl/api/auth/forgot-password" `
+    -Body @{ email = $ownerEmail } `
+    -ExpectStatus @(200)
+
+$resetToken = $null
+if ($resetResult) { $resetToken = $resetResult.resetToken }
+
+Invoke-Test -Name "POST /api/auth/forgot-password (unknown email -> 200 no enum)" `
+    -Method POST `
+    -Url "$BaseUrl/api/auth/forgot-password" `
+    -Body @{ email = "nobody_$run@test.com" } `
+    -ExpectStatus @(200) | Out-Null
+
+Invoke-Test -Name "POST /api/auth/reset-password (invalid token -> 400)" `
+    -Method POST `
+    -Url "$BaseUrl/api/auth/reset-password" `
+    -Body @{ token = "bogustoken123"; newPassword = "NewPass1!" } `
+    -ExpectStatus @(400) | Out-Null
+
+if ($resetToken) {
+    Invoke-Test -Name "POST /api/auth/reset-password (valid token)" `
+        -Method POST `
+        -Url "$BaseUrl/api/auth/reset-password" `
+        -Body @{ token = $resetToken; newPassword = "NewPassword1!" } `
+        -ExpectStatus @(200) | Out-Null
+
+    $newOwnerLogin = Invoke-Test -Name "POST /api/auth/login (with new password after reset)" `
+        -Method POST `
+        -Url "$BaseUrl/api/auth/login" `
+        -Body @{ email = $ownerEmail; password = "NewPassword1!" } `
+        -ExpectStatus @(200)
+
+    if ($newOwnerLogin) { $ownerToken = $newOwnerLogin.token }
+}
+else {
+    Write-Host "  [SKIP] Reset password tests -- resetToken not returned" -ForegroundColor Yellow
+    $script:Skip += 2
+}
+
+# -----------------------------------------------
 Write-Header "3. Vehicles"
 # -----------------------------------------------
 
