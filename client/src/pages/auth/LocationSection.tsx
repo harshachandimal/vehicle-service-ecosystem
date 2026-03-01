@@ -1,7 +1,7 @@
 import Input from '../../components/ui/Input';
+import { DISTRICTS } from '../../constants/locations';
 
-/** Available districts in Sri Lanka */
-const districts = ['Colombo', 'Gampaha', 'Kalutara', 'Kandy', 'Galle', 'Matara', 'Kurunegala'];
+
 
 /**
  * Location section props
@@ -43,7 +43,7 @@ export default function LocationSection({ formData, onChange }: LocationSectionP
                         onChange={(e) => onChange('district', e.target.value)}
                     >
                         <option value="">Select your district</option>
-                        {districts.map((d) => (
+                        {DISTRICTS.map((d) => (
                             <option key={d} value={d}>
                                 {d}
                             </option>

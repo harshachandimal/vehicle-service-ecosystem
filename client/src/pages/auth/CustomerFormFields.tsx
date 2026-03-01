@@ -1,14 +1,7 @@
 import { Link } from 'react-router-dom';
 import Input from '../../components/ui/Input';
+import { DISTRICTS } from '../../constants/locations';
 
-/** Available districts in Sri Lanka */
-const districts = ['Colombo', 'Gampaha', 'Kalutara', 'Kandy', 'Galle', 'Matara', 'Kurunegala'];
-/** Cities mapped by district */
-const citiesByDistrict: Record<string, string[]> = {
-    Colombo: ['Colombo', 'Dehiwala', 'Moratuwa', 'Kotte'],
-    Gampaha: ['Gampaha', 'Negombo', 'Ja-Ela', 'Kadawatha'],
-    Kalutara: ['Kalutara', 'Panadura', 'Horana', 'Beruwala'],
-};
 
 /**
  * Customer form fields props
@@ -72,13 +65,10 @@ export default function CustomerFormFields({ formData, errors, onChange }: Custo
                     <select
                         className="w-full px-4 py-3 bg-white rounded-lg border border-gray-200 focus:border-primary outline-none"
                         value={formData.district}
-                        onChange={(e) => {
-                            onChange('district', e.target.value);
-                            onChange('city', '');
-                        }}
+                        onChange={(e) => onChange('district', e.target.value)}
                     >
                         <option value="">Select district</option>
-                        {districts.map((d) => (
+                        {DISTRICTS.map((d) => (
                             <option key={d} value={d}>
                                 {d}
                             </option>
@@ -86,21 +76,12 @@ export default function CustomerFormFields({ formData, errors, onChange }: Custo
                     </select>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-dark mb-2">City</label>
-                    <select
-                        className="w-full px-4 py-3 bg-white rounded-lg border border-gray-200 focus:border-primary outline-none"
+                    <Input
+                        label="City"
+                        placeholder="Enter your city"
                         value={formData.city}
                         onChange={(e) => onChange('city', e.target.value)}
-                        disabled={!formData.district}
-                    >
-                        <option value="">Select city</option>
-                        {formData.district &&
-                            citiesByDistrict[formData.district]?.map((c) => (
-                                <option key={c} value={c}>
-                                    {c}
-                                </option>
-                            ))}
-                    </select>
+                    />
                 </div>
             </div>
 

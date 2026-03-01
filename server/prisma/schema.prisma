@@ -34,6 +34,7 @@ enum ServiceCategory {
   GARAGE
   CARRIER
   DETAILER
+  TYRE_HOUSE
 }
 
 /// Invoice status enumeration

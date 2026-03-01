@@ -65,7 +65,7 @@ export interface BusinessRegisterCredentials {
     /** Business display name for the profile */
     businessName: string;
     /** Service category */
-    category: 'GARAGE' | 'CARRIER' | 'DETAILER';
+    category: 'GARAGE' | 'CARRIER' | 'DETAILER' | 'TYRE_HOUSE';
     /** Street-level address */
     streetAddress?: string;
     /** Optional description */

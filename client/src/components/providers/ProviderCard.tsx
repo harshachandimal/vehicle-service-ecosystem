@@ -19,6 +19,7 @@ const CATEGORY_LABELS: Record<string, string> = {
     GARAGE: 'Auto Garage',
     CARRIER: 'Transport & Carrier',
     DETAILER: 'Detailing Studio',
+    TYRE_HOUSE: 'Tyre House',
 };
 
 interface Props { provider: ProviderListItem; }

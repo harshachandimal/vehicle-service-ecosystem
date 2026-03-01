@@ -51,7 +51,7 @@ export interface BusinessRegisterRequest extends RegisterRequest {
     /** Business name */
     businessName: string;
     /** Service category */
-    category: 'GARAGE' | 'CARRIER' | 'DETAILER';
+    category: 'GARAGE' | 'CARRIER' | 'DETAILER' | 'TYRE_HOUSE';
     /** Optional street address */
     streetAddress?: string;
     /** Optional business description */

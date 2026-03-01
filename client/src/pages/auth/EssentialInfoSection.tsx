@@ -55,6 +55,7 @@ export default function EssentialInfoSection({ formData, errors, onChange }: Ess
                     <option value="GARAGE">🔧 Garage / Auto Repair</option>
                     <option value="CARRIER">🚛 Carrier / Towing</option>
                     <option value="DETAILER">✨ Detailer / Car Wash</option>
+                    <option value="TYRE_HOUSE">🔘 Tyre House</option>
                 </select>
                 {errors.category && <p className="text-sm text-red-600 mt-1">{errors.category}</p>}
             </div>

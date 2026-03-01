@@ -15,12 +15,14 @@ const BADGE_COLORS: Record<string, string> = {
     GARAGE: 'bg-blue-50 text-blue-700',
     CARRIER: 'bg-violet-50 text-violet-700',
     DETAILER: 'bg-emerald-50 text-emerald-700',
+    TYRE_HOUSE: 'bg-orange-50 text-orange-700',
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
     GARAGE: 'Auto Garage',
     CARRIER: 'Transport & Carrier',
     DETAILER: 'Detailing Studio',
+    TYRE_HOUSE: 'Tyre House',
 };
 
 /** Skeleton for the detail page while loading */

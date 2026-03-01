@@ -16,7 +16,7 @@ export default function BusinessRegisterPage() {
     const { registerBusiness } = useAuth();
     const [formData, setFormData] = useState({
         businessName: '', email: '', phone: '', password: '', confirmPassword: '',
-        district: '', city: '', streetAddress: '', category: '' as 'GARAGE' | 'CARRIER' | 'DETAILER' | '',
+        district: '', city: '', streetAddress: '', category: '' as 'GARAGE' | 'CARRIER' | 'DETAILER' | 'TYRE_HOUSE' | '',
         businessDescription: '', registrationNumber: '', agreeToTerms: false,
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -65,7 +65,7 @@ export default function BusinessRegisterPage() {
                 city: formData.city,
                 role: 'PROVIDER',
                 businessName: formData.businessName,
-                category: formData.category as 'GARAGE' | 'CARRIER' | 'DETAILER',
+                category: formData.category as 'GARAGE' | 'CARRIER' | 'DETAILER' | 'TYRE_HOUSE',
                 streetAddress: formData.streetAddress,
                 businessDescription: formData.businessDescription,
                 registrationNumber: formData.registrationNumber,

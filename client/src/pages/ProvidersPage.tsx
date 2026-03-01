@@ -68,12 +68,22 @@ export default function ProvidersPage() {
     const handleSearch = () => applyFilters({ ...filters, search: searchInput || undefined });
 
     return (
-        <div className="min-h-screen bg-silver py-10 px-4">
-            <div className="max-w-7xl mx-auto">
+        <div
+            className="min-h-screen py-10 px-4"
+            style={{
+                backgroundImage: `url('/Gemini_Generated_Image_5k4jyd5k4jyd5k4j (1).png')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundAttachment: 'fixed',
+            }}
+        >
+            {/* Overlay for readability */}
+            <div className="min-h-screen bg-white/70 backdrop-blur-sm absolute inset-0 -z-10" />
+            <div className="max-w-7xl mx-auto relative">
                 {/* Page header */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-extrabold text-dark mb-1">Find a Service Provider</h1>
-                    <p className="text-gray-500 text-sm">Discover verified auto-service professionals across Sri Lanka</p>
+                    <h1 className="text-3xl font-extrabold text-white mb-1">Find a Service Provider</h1>
+                    <p className="text-white text-sm">Discover verified auto-service professionals across Sri Lanka</p>
                 </div>
 
                 {/* Search bar */}

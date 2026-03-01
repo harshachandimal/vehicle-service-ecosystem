@@ -35,6 +35,7 @@ export enum ServiceCategory {
     GARAGE = 'GARAGE',
     CARRIER = 'CARRIER',
     DETAILER = 'DETAILER',
+    TYRE_HOUSE = 'TYRE_HOUSE',
 }
 
 

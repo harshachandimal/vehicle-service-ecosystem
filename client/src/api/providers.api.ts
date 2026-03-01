@@ -17,7 +17,7 @@ export interface ProviderFilters {
 export interface ProviderListItem {
     id: string;
     businessName: string;
-    category: 'GARAGE' | 'CARRIER' | 'DETAILER';
+    category: 'GARAGE' | 'CARRIER' | 'DETAILER' | 'TYRE_HOUSE';
     city: string;
     district: string;
     businessDescription?: string;
@@ -33,7 +33,7 @@ export interface ProviderDetail {
     profile: {
         id: string;
         businessName: string;
-        category: 'GARAGE' | 'CARRIER' | 'DETAILER';
+        category: 'GARAGE' | 'CARRIER' | 'DETAILER' | 'TYRE_HOUSE';
         city: string;
         district: string;
         streetAddress: string;
