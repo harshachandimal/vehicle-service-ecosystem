@@ -10,11 +10,61 @@ import { ProviderRepository } from './provider.repository';
 import {
     UpdateProviderProfileDTO,
     CreateServiceItemDTO,
+    ProviderFilterDTO,
 } from '../../types/provider.types';
+
+
 
 /** Instantiate dependencies following DIP */
 const providerRepository = new ProviderRepository();
 const providerService = new ProviderService(providerRepository);
+
+/**
+ * GET /api/providers
+ * List all providers with optional filtering (Public)
+ */
+export async function getAllProvidersHandler(
+    req: AuthenticatedRequest,
+    res: Response
+): Promise<void> {
+    try {
+        const filters: ProviderFilterDTO = {
+            location: req.query.location as string | undefined,
+            search: req.query.search as string | undefined,
+            type: req.query.type as ProviderFilterDTO['type'],
+            minRating: req.query.minRating ? parseFloat(req.query.minRating as string) : undefined,
+        };
+        const providers = await providerService.getAllProviders(filters);
+        res.status(200).json(providers);
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to fetch providers';
+        res.status(500).json({ error: message });
+    }
+}
+
+/**
+ * POST /api/providers/photo
+ * Upload or replace the provider's profile photo
+ * Protected: PROVIDER only
+ */
+export async function uploadPhotoHandler(
+    req: AuthenticatedRequest,
+    res: Response
+): Promise<void> {
+    try {
+        const userId = req.user!.userId;
+        if (!req.file) {
+            res.status(400).json({ error: 'No image file provided' });
+            return;
+        }
+        const photoUrl = `/uploads/${req.file.filename}`;
+        const profile = await providerService.updateProfile(userId, { photoUrl });
+        res.status(200).json({ photoUrl, profile });
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Upload failed';
+        res.status(500).json({ error: message });
+    }
+}
 
 /**
  * PUT /api/providers/profile

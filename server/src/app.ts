@@ -1,5 +1,6 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import path from 'path';
 import { PrismaService } from './common/prisma.service';
 import authRoutes from './modules/auth/auth.routes';
 import vehicleRoutes from './modules/vehicle/vehicle.routes';
@@ -37,6 +38,8 @@ function configureMiddleware(app: Application): void {
     app.use(cors());
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
+    // Serve uploaded provider photos as static files
+    app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 }
 
 /**

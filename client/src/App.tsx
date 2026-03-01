@@ -3,11 +3,14 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import LandingPage from './pages/LandingPage';
+import ProvidersPage from './pages/ProvidersPage';
+import ProviderProfilePage from './pages/ProviderProfilePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import BusinessRegisterPage from './pages/auth/BusinessRegisterPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage';
+
 
 /**
  * Main application component with routing and authentication provider
@@ -32,6 +35,8 @@ function App() {
               <main className="flex-1">
                 <Routes>
                   <Route path="/" element={<LandingPage />} />
+                  <Route path="/providers" element={<ProvidersPage />} />
+                  <Route path="/providers/:id" element={<ProviderProfilePage />} />
                 </Routes>
               </main>
               <Footer />

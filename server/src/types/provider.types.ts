@@ -2,6 +2,32 @@
  * Provider Profile and Service Domain Types
  */
 
+/** Provider badge type used for UI display */
+export type ProviderBadge = 'Authorized' | 'Premium' | 'New';
+
+/** Query filters for listing providers */
+export interface ProviderFilterDTO {
+    location?: string;
+    minRating?: number;
+    type?: ProviderBadge;
+    search?: string;
+}
+
+/** Lightweight provider item for listing pages */
+export interface ProviderListItem {
+    id: string;
+    businessName: string;
+    category: ServiceCategory;
+    city: string;
+    district: string;
+    businessDescription?: string;
+    photoUrl?: string;
+    badge: ProviderBadge;
+    rating: number;
+    reviewCount: number;
+    serviceCount: number;
+}
+
 /**
  * Service Categories for Provider Classification
  */
@@ -10,6 +36,7 @@ export enum ServiceCategory {
     CARRIER = 'CARRIER',
     DETAILER = 'DETAILER',
 }
+
 
 /**
  * Provider Profile Interface
@@ -25,6 +52,7 @@ export interface ProviderProfile {
     city: string;
     businessDescription?: string;
     registrationNumber?: string;
+    photoUrl?: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -63,6 +91,7 @@ export interface UpdateProviderProfileDTO {
     city?: string;
     businessDescription?: string;
     registrationNumber?: string;
+    photoUrl?: string;
 }
 
 /**

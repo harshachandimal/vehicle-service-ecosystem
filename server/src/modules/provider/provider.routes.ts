@@ -6,6 +6,7 @@
 
 import { Router } from 'express';
 import { authenticate, authorize } from '../../common/middleware/auth.middleware';
+import { uploadPhoto } from '../../common/middleware/upload.middleware';
 import { UserRole } from '../../types/user.types';
 import {
     updateProfileHandler,
@@ -13,9 +14,28 @@ import {
     removeServiceHandler,
     getMyProfileHandler,
     getProviderByIdHandler,
+    getAllProvidersHandler,
+    uploadPhotoHandler,
 } from './provider.controller';
 
+
 const providerRoutes = Router();
+
+/**
+ * POST /api/providers/photo
+ * Upload a profile photo for the authenticated provider
+ * Protected: PROVIDER only
+ *
+ * @body multipart/form-data with field 'photo' (jpeg/png/webp, max 5 MB)
+ * @returns { photoUrl } — relative URL of the stored image
+ */
+providerRoutes.post(
+    '/photo',
+    authenticate,
+    authorize([UserRole.PROVIDER]),
+    uploadPhoto,
+    uploadPhotoHandler
+);
 
 /**
  * PUT /api/providers/profile
@@ -75,6 +95,18 @@ providerRoutes.get(
     authorize([UserRole.PROVIDER]),
     getMyProfileHandler
 );
+
+/**
+ * GET /api/providers
+ * List providers with optional filtering (Public)
+ *
+ * @query {string} location - City or district filter (partial match)
+ * @query {string} search - Business name search
+ * @query {string} type - Authorized | Premium | New
+ * @query {number} minRating - Minimum rating filter
+ * @returns {ProviderListItem[]} - Array of matching providers
+ */
+providerRoutes.get('/', getAllProvidersHandler);
 
 /**
  * GET /api/providers/:id

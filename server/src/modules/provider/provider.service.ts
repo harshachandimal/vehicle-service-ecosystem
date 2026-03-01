@@ -8,6 +8,8 @@ import {
     UpdateProviderProfileDTO,
     CreateServiceItemDTO,
     ProviderDetailsResponse,
+    ProviderFilterDTO,
+    ProviderListItem,
 } from '../../types/provider.types';
 import { ProviderRepository } from './provider.repository';
 
@@ -25,6 +27,16 @@ export class ProviderService {
      */
     constructor(providerRepository: ProviderRepository) {
         this.providerRepository = providerRepository;
+    }
+
+    /**
+     * Get all providers with optional filters
+     *
+     * @param {ProviderFilterDTO} filters - Filter criteria
+     * @returns Promise with list of provider list items
+     */
+    async getAllProviders(filters: ProviderFilterDTO): Promise<ProviderListItem[]> {
+        return await this.providerRepository.getAllProviders(filters);
     }
 
     /**

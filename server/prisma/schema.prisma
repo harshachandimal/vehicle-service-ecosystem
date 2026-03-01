@@ -112,6 +112,7 @@ model ProviderProfile {
   city                String          // City
   businessDescription String?         // Optional business description
   registrationNumber  String?         // Optional BR number
+  photoUrl            String?         // Optional profile photo URL
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
   user                User            @relation(fields: [userId], references: [id], onDelete: Cascade)

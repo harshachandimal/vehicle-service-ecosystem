@@ -1,4 +1,3 @@
-import { Search } from 'lucide-react';
 
 /**
  * Hero section component for the landing page
@@ -23,17 +22,7 @@ export default function Hero() {
                     Connect with verified mechanics, garages, and detailing experts across Sri Lanka.
                 </p>
 
-                <div className="glass max-w-3xl mx-auto p-2 rounded-2xl flex flex-col md:flex-row gap-2">
-                    <input
-                        type="text"
-                        placeholder="Search for services or providers..."
-                        className="flex-1 px-6 py-4 bg-white/50 rounded-xl border-none outline-none text-dark placeholder:text-dark/60 font-medium"
-                    />
-                    <button className="btn-primary flex items-center gap-2 whitespace-nowrap">
-                        <Search size={20} />
-                        Search
-                    </button>
-                </div>
+
             </div>
         </section>
     );
