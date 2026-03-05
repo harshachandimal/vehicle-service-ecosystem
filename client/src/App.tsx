@@ -4,6 +4,7 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import LandingPage from './pages/LandingPage';
 import ProvidersPage from './pages/ProvidersPage';
+import ServicesPage from './pages/ServicesPage';
 import ProviderProfilePage from './pages/ProviderProfilePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
@@ -37,6 +38,7 @@ function App() {
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/providers" element={<ProvidersPage />} />
                   <Route path="/providers/:id" element={<ProviderProfilePage />} />
+                  <Route path="/services" element={<ServicesPage />} />
                 </Routes>
               </main>
               <Footer />

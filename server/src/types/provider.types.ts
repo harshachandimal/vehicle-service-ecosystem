@@ -68,6 +68,8 @@ export interface ProviderService {
     name: string;
     price: number;
     description?: string;
+    vehicleType?: string;
+    duration?: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -79,6 +81,8 @@ export interface CreateServiceItemDTO {
     name: string;
     price: number;
     description?: string;
+    vehicleType?: string;
+    duration?: number;
 }
 
 /**
@@ -101,4 +105,31 @@ export interface UpdateProviderProfileDTO {
 export interface ProviderDetailsResponse {
     profile: ProviderProfile;
     services: ProviderService[];
+}
+
+/** Query filters for the public service listing */
+export interface ServiceFilterDTO {
+    vehicleType?: string;
+    location?: string;
+    minRating?: number;
+    maxPrice?: number;
+    maxDuration?: number;
+    search?: string;
+}
+
+/** Flattened service item for the public listing page */
+export interface ServiceListItem {
+    id: string;
+    name: string;
+    price: number;
+    description?: string;
+    vehicleType?: string;
+    duration?: number;
+    providerName: string;
+    providerCity: string;
+    providerDistrict: string;
+    providerId: string;
+    providerPhotoUrl?: string;
+    rating: number;
+    reviewCount: number;
 }

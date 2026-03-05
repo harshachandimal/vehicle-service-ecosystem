@@ -13,6 +13,8 @@ import {
     ProviderFilterDTO,
     ProviderListItem,
     ProviderBadge,
+    ServiceFilterDTO,
+    ServiceListItem,
 } from '../../types/provider.types';
 
 /**
@@ -61,6 +63,65 @@ export class ProviderRepository {
 
         if (filters.type === 'Premium') {
             results = results.filter((r) => r.badge === 'Premium');
+        }
+
+        return results;
+    }
+
+    /**
+     * Get all available services (across all providers) with optional filters
+     * @param {ServiceFilterDTO} filters - Optional filter criteria
+     * @returns Promise with flattened list of service items
+     */
+    async getAvailableServices(filters: ServiceFilterDTO): Promise<ServiceListItem[]> {
+        const where: Record<string, unknown> = {};
+
+        if (filters.vehicleType && filters.vehicleType !== 'Any') {
+            where.vehicleType = filters.vehicleType;
+        }
+        if (filters.maxPrice !== undefined) {
+            where.price = { lte: filters.maxPrice };
+        }
+        if (filters.maxDuration !== undefined) {
+            where.duration = { lte: filters.maxDuration };
+        }
+        if (filters.search) {
+            where.name = { contains: filters.search, mode: 'insensitive' };
+        }
+
+        const services = await this.prisma.providerService.findMany({
+            where,
+            include: { profile: true },
+            orderBy: { createdAt: 'desc' },
+        });
+
+        let results: ServiceListItem[] = services.map((s) => ({
+            id: s.id,
+            name: s.name,
+            price: parseFloat(s.price.toString()),
+            description: s.description ?? undefined,
+            vehicleType: s.vehicleType ?? undefined,
+            duration: s.duration ?? undefined,
+            providerName: s.profile.businessName,
+            providerCity: s.profile.city,
+            providerDistrict: s.profile.district,
+            providerId: s.profile.id,
+            providerPhotoUrl: s.profile.photoUrl ?? undefined,
+            rating: 4.5,     // placeholder – no ratings table yet
+            reviewCount: 200, // placeholder
+        }));
+
+        if (filters.location) {
+            const loc = filters.location.toLowerCase();
+            results = results.filter(
+                (r) =>
+                    r.providerCity.toLowerCase().includes(loc) ||
+                    r.providerDistrict.toLowerCase().includes(loc)
+            );
+        }
+
+        if (filters.minRating) {
+            results = results.filter((r) => r.rating >= filters.minRating!);
         }
 
         return results;

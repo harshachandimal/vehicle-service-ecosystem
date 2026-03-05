@@ -130,6 +130,8 @@ model ProviderService {
   name        String
   price       Decimal         @db.Decimal(10, 2)
   description String?
+  vehicleType String?         // e.g. Car, Van, Truck, SUV, Sports Car
+  duration    Int?            // Estimated duration in minutes
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
   profile     ProviderProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)

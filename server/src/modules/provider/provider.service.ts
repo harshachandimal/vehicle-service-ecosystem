@@ -10,6 +10,8 @@ import {
     ProviderDetailsResponse,
     ProviderFilterDTO,
     ProviderListItem,
+    ServiceFilterDTO,
+    ServiceListItem,
 } from '../../types/provider.types';
 import { ProviderRepository } from './provider.repository';
 
@@ -109,5 +111,15 @@ export class ProviderService {
      */
     async getProviderDetailsById(profileId: string): Promise<ProviderDetailsResponse | null> {
         return await this.providerRepository.getProfileById(profileId);
+    }
+
+    /**
+     * Get all available services with optional filters
+     *
+     * @param {ServiceFilterDTO} filters - Filter criteria
+     * @returns Promise with list of service items
+     */
+    async getAvailableServices(filters: ServiceFilterDTO): Promise<ServiceListItem[]> {
+        return await this.providerRepository.getAvailableServices(filters);
     }
 }

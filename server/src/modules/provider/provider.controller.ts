@@ -11,6 +11,7 @@ import {
     UpdateProviderProfileDTO,
     CreateServiceItemDTO,
     ProviderFilterDTO,
+    ServiceFilterDTO,
 } from '../../types/provider.types';
 
 
@@ -172,6 +173,31 @@ export async function getMyProfileHandler(
         res.status(200).json(details);
     } catch (error) {
         const message = error instanceof Error ? error.message : 'Failed to fetch profile';
+        res.status(500).json({ error: message });
+    }
+}
+
+/**
+ * GET /api/services
+ * List all available services with optional filtering (Public)
+ */
+export async function getAvailableServicesHandler(
+    req: AuthenticatedRequest,
+    res: Response
+): Promise<void> {
+    try {
+        const filters: ServiceFilterDTO = {
+            vehicleType: req.query.vehicleType as string | undefined,
+            location: req.query.location as string | undefined,
+            minRating: req.query.minRating ? parseFloat(req.query.minRating as string) : undefined,
+            maxPrice: req.query.maxPrice ? parseFloat(req.query.maxPrice as string) : undefined,
+            maxDuration: req.query.maxDuration ? parseInt(req.query.maxDuration as string) : undefined,
+            search: req.query.search as string | undefined,
+        };
+        const services = await providerService.getAvailableServices(filters);
+        res.status(200).json(services);
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to fetch services';
         res.status(500).json({ error: message });
     }
 }
