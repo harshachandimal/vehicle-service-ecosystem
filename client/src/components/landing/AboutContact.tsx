@@ -1,95 +1,79 @@
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
-import { useState } from 'react';
+import { Mail, Phone, MapPin, Target } from 'lucide-react';
+import ContactForm from '../shared/ContactForm';
 
-/**
- * About and contact section component with contact form
- * @returns AboutContact component
- */
+const contactDetails = [
+    { icon: Mail, label: 'Email', value: 'autofix@email.com' },
+    { icon: Phone, label: 'Phone', value: '+94 77 123 4567' },
+    { icon: MapPin, label: 'Location', value: 'Colombo, Sri Lanka' },
+];
+
 export default function AboutContact() {
-    const [formData, setFormData] = useState({ name: '', phone: '', email: '', message: '' });
-
     return (
-        <section className="py-20 px-6 bg-black/30">
+        <section className="py-24 px-6">
             <div className="max-w-7xl mx-auto">
+
+                {/* Header */}
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl font-bold text-white mb-4">What is AutoFix?</h2>
-                    <p className="text-white/70 max-w-3xl mx-auto leading-relaxed">
-                        AutoFix connects vehicle owners with trusted service providers across Sri Lanka.
-                        Our mission is to make vehicle maintenance simple, transparent, and reliable for everyone in our community.
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-300 text-xs font-semibold uppercase tracking-widest">
+                        About us
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">What is AutoFix?</h2>
+                    <p className="text-slate-400 max-w-2xl mx-auto text-sm leading-relaxed">
+                        AutoFix connects vehicle owners with trusted service providers across Sri Lanka —
+                        making vehicle maintenance simple, transparent, and reliable for everyone.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-                    <div className="space-y-6">
-                        <div className="glass p-6 rounded-2xl">
-                            <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-                                <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
-                                Our Mission
-                            </h3>
-                            <p className="text-white/70 leading-relaxed">
-                                To revolutionize how vehicle servicing works in Sri Lanka by connecting owners with quality providers.
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+                    {/* Left — info */}
+                    <div className="space-y-5">
+                        {/* Mission */}
+                        <div className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-7 hover:border-blue-500/30 hover:bg-white/8 transition-all duration-300 group">
+                            <div className="absolute -top-px left-6 right-6 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+                            <div className="flex items-center gap-3 mb-3">
+                                <div className="w-9 h-9 rounded-xl bg-blue-500/15 border border-blue-500/25 flex items-center justify-center group-hover:bg-blue-500/25 transition-colors">
+                                    <Target size={16} className="text-blue-400" />
+                                </div>
+                                <h3 className="text-lg font-bold text-white">Our Mission</h3>
+                            </div>
+                            <p className="text-slate-400 text-sm leading-relaxed">
+                                To revolutionize how vehicle servicing works in Sri Lanka — connecting owners with quality providers through a platform built on transparency and trust.
                             </p>
                         </div>
 
-                        <div className="glass p-6 rounded-2xl">
-                            <h3 className="text-xl font-bold text-white mb-4">Get in Touch</h3>
-                            <div className="space-y-3">
-                                <div className="flex items-center gap-3 text-white/80">
-                                    <Mail size={20} className="text-blue-400" />
-                                    <span>autofix@email.com</span>
-                                </div>
-                                <div className="flex items-center gap-3 text-white/80">
-                                    <Phone size={20} className="text-blue-400" />
-                                    <span>+94 77 123 4567</span>
-                                </div>
-                                <div className="flex items-center gap-3 text-white/80">
-                                    <MapPin size={20} className="text-blue-400" />
-                                    <span>Colombo, Sri Lanka</span>
-                                </div>
+                        {/* Contact details */}
+                        <div className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-7 hover:border-blue-500/30 transition-all duration-300">
+                            <div className="absolute -top-px left-6 right-6 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+                            <h3 className="text-lg font-bold text-white mb-5">Get in Touch</h3>
+                            <div className="space-y-4">
+                                {contactDetails.map(({ icon: Icon, label, value }) => (
+                                    <div key={label} className="flex items-center gap-4">
+                                        <div className="w-9 h-9 rounded-xl bg-blue-500/15 border border-blue-500/25 flex items-center justify-center shrink-0">
+                                            <Icon size={15} className="text-blue-400" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{label}</p>
+                                            <p className="text-sm text-slate-200">{value}</p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
 
-                    <div className="glass p-8 rounded-2xl">
-                        <h3 className="text-2xl font-bold text-white mb-6">Send us a Message</h3>
-                        <form className="space-y-4">
-                            <input
-                                type="text"
-                                placeholder="Full Name *"
-                                className="w-full px-4 py-3 bg-white/10 text-white placeholder:text-white/50 rounded-lg border border-white/20 focus:border-white/60 outline-none transition backdrop-blur-sm"
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            />
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input
-                                    type="tel"
-                                    placeholder="Phone Number"
-                                    className="px-4 py-3 bg-white/10 text-white placeholder:text-white/50 rounded-lg border border-white/20 focus:border-white/60 outline-none transition backdrop-blur-sm"
-                                    value={formData.phone}
-                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                />
-                                <input
-                                    type="email"
-                                    placeholder="Email Address *"
-                                    className="px-4 py-3 bg-white/10 text-white placeholder:text-white/50 rounded-lg border border-white/20 focus:border-white/60 outline-none transition backdrop-blur-sm"
-                                    value={formData.email}
-                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                />
-                            </div>
-                            <textarea
-                                placeholder="Message *"
-                                rows={4}
-                                className="w-full px-4 py-3 bg-white/10 text-white placeholder:text-white/50 rounded-lg border border-white/20 focus:border-white/60 outline-none transition resize-none backdrop-blur-sm"
-                                value={formData.message}
-                                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                            ></textarea>
-                            <button type="submit" className="btn-primary w-full flex items-center justify-center gap-2">
-                                <Send size={18} />
-                                Send Message
-                            </button>
-                        </form>
+                    {/* Right — contact form */}
+                    <div className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-8">
+                        <div className="absolute -top-px left-6 right-6 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+                        <h3 className="text-xl font-bold text-white mb-6">Send a Message</h3>
+                        <ContactForm />
                     </div>
                 </div>
+
+                {/* Footer line */}
+                <p className="text-center text-slate-600 text-xs mt-16">
+                    © {new Date().getFullYear()} AutoFix · Built for Sri Lanka
+                </p>
             </div>
         </section>
     );

@@ -19,7 +19,7 @@ export default function Navbar() {
                     <Link to="/services" className="text-dark hover:text-primary transition-colors font-medium">
                         Services
                     </Link>
-                    <Link to="/contact" className="text-dark hover:text-primary transition-colors font-medium">
+                    <Link to="/about" className="text-dark hover:text-primary transition-colors font-medium">
                         Contact
                     </Link>
                 </div>
