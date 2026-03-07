@@ -154,3 +154,15 @@ model Invoice {
   @@map("invoices")
 }
 
+/// Contact Message model
+/// Stores contact form submissions from the public website
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
+}
