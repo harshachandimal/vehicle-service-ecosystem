@@ -12,4 +12,19 @@ const mailer = nodemailer.createTransport({
     },
 });
 
+/**
+ * Send an email using the configured nodemailer transporter
+ * @param to      - Recipient email address
+ * @param subject - Email subject line
+ * @param html    - HTML body of the email
+ */
+export async function sendEmail(to: string, subject: string, html: string): Promise<void> {
+    await mailer.sendMail({
+        from: `"AutoFix" <${process.env.SMTP_USER}>`,
+        to,
+        subject,
+        html,
+    });
+}
+
 export default mailer;

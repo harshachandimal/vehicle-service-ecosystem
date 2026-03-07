@@ -12,7 +12,6 @@ import { authApi } from '../../api/auth.api';
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
-    const [resetToken, setResetToken] = useState('');
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
 
@@ -31,9 +30,8 @@ export default function ForgotPasswordPage() {
 
         setLoading(true);
         try {
-            const result = await authApi.forgotPassword(email);
+            await authApi.forgotPassword(email);
             setSubmitted(true);
-            if (result.resetToken) setResetToken(result.resetToken);
         } catch {
             setError('Something went wrong. Please try again.');
         } finally {
@@ -46,20 +44,8 @@ export default function ForgotPasswordPage() {
             {submitted ? (
                 <div className="space-y-4 text-center">
                     <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
-                        Check your email for the reset link.
+                        A password reset link has been sent to <strong>{email}</strong>. Please check your inbox (and spam folder).
                     </div>
-                    {resetToken && (
-                        <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg text-xs break-all">
-                            <p className="font-semibold mb-1">Dev Mode — Reset Token:</p>
-                            <code>{resetToken}</code>
-                            <p className="mt-2 text-blue-600">
-                                Go to{' '}
-                                <Link to={`/reset-password/${resetToken}`} className="underline font-semibold">
-                                    Reset Password
-                                </Link>
-                            </p>
-                        </div>
-                    )}
                     <Link to="/login" className="block text-sm text-primary hover:underline mt-2">
                         Back to Sign In
                     </Link>

@@ -62,7 +62,7 @@ export const authApi = {
      * @param email - The user's registered email address
      * @returns Promise resolving to a message and (in dev) the raw resetToken
      */
-    forgotPassword: async (email: string): Promise<{ message: string; resetToken?: string }> => {
+    forgotPassword: async (email: string): Promise<{ message: string }> => {
         const response = await api.post('/api/auth/forgot-password', { email });
         return response.data;
     },

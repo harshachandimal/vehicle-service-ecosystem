@@ -8,6 +8,7 @@ import {
 } from '../../types/auth.types';
 import { hashPassword, comparePassword } from '../../utils/password.util';
 import { generateToken } from '../../utils/jwt.util';
+import { sendEmail } from '../../utils/mailer';
 import { ServiceCategory } from '@prisma/client';
 import crypto from 'crypto';
 
@@ -120,14 +121,15 @@ export class AuthService {
     }
 
     /**
-     * Generate a password reset token for a given email
-     * Always responds successfully to prevent user enumeration
+     * Generate a password reset token and send a reset link via email.
+     * Always responds with the same message to prevent user enumeration.
      * @param {string} email - The user's email address
-     * @returns {Promise<{ message: string; resetToken?: string }>}
+     * @returns {Promise<{ message: string }>}
      */
-    async forgotPassword(email: string): Promise<{ message: string; resetToken?: string }> {
+    async forgotPassword(email: string): Promise<{ message: string }> {
+        const genericResponse = { message: 'If that email is registered, a reset link has been sent.' };
         const user = await this.userRepository.findByEmail(email);
-        if (!user) return { message: 'If that email is registered, a reset link has been sent.' };
+        if (!user) return genericResponse;
 
         const rawToken = crypto.randomBytes(32).toString('hex');
         const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
@@ -138,10 +140,37 @@ export class AuthService {
             data: { passwordResetToken: hashedToken, passwordResetExpires: expires },
         });
 
-        return {
-            message: 'If that email is registered, a reset link has been sent.',
-            resetToken: rawToken,
-        };
+        const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+        const resetLink = `${clientUrl}/reset-password/${rawToken}`;
+
+        await sendEmail(
+            user.email,
+            'Reset your AutoFix password',
+            `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #f97316;">Reset Your Password</h2>
+                <p>Hi ${user.name},</p>
+                <p>We received a request to reset the password for your AutoFix account.</p>
+                <p>Click the button below to set a new password. This link is valid for <strong>1 hour</strong>.</p>
+                <div style="text-align: center; margin: 32px 0;">
+                    <a href="${resetLink}"
+                       style="background-color: #f97316; color: white; padding: 14px 28px;
+                              border-radius: 8px; text-decoration: none; font-weight: bold;
+                              display: inline-block;">
+                        Reset Password
+                    </a>
+                </div>
+                <p style="font-size: 13px; color: #666;">
+                    If you did not request a password reset, you can safely ignore this email.
+                    Your password will not change.
+                </p>
+                <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+                <p style="font-size: 12px; color: #aaa;">AutoFix Vehicle Service Ecosystem</p>
+            </div>
+            `
+        );
+
+        return genericResponse;
     }
 
     /**
