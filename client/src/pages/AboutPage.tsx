@@ -1,46 +1,9 @@
 import { Target, Mail, Phone, MapPin, ShieldCheck, Star, Zap, Users } from 'lucide-react';
-import ContactForm from '../components/about/ContactForm';
+import ContactForm from '../components/shared/ContactForm';
+import Stat from '../components/about/Stat';
+import GlassCard from '../components/about/GlassCard';
+import ValuePill from '../components/about/ValuePill';
 
-/* ── Stat pill ─────────────────────────────────────────── */
-function Stat({ value, label }: { value: string; label: string }) {
-    return (
-        <div className="flex flex-col items-center px-8 py-4">
-            <span className="text-3xl font-extrabold text-blue-400 drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]">
-                {value}
-            </span>
-            <span className="text-xs text-slate-400 mt-1 uppercase tracking-widest">{label}</span>
-        </div>
-    );
-}
-
-/* ── Glass card ─────────────────────────────────────────── */
-function GlassCard({ icon: Icon, title, children }: { icon: React.ElementType; title: string; children: React.ReactNode }) {
-    return (
-        <div className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:border-blue-500/40 hover:bg-white/10 transition-all duration-300 group">
-            {/* Blue glow accent */}
-            <div className="absolute -top-px left-8 right-8 h-px bg-gradient-to-r from-transparent via-blue-500/60 to-transparent" />
-            <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center group-hover:bg-blue-500/25 transition-colors">
-                    <Icon size={20} className="text-blue-400" />
-                </div>
-                <h2 className="text-xl font-bold text-white">{title}</h2>
-            </div>
-            {children}
-        </div>
-    );
-}
-
-/* ── Value pill ─────────────────────────────────────────── */
-function ValuePill({ icon: Icon, text }: { icon: React.ElementType; text: string }) {
-    return (
-        <div className="flex items-center gap-3 px-5 py-3 rounded-full border border-blue-500/20 bg-blue-500/10 backdrop-blur-sm">
-            <Icon size={16} className="text-blue-400 shrink-0" />
-            <span className="text-sm font-medium text-slate-200">{text}</span>
-        </div>
-    );
-}
-
-/* ── Page ───────────────────────────────────────────────── */
 export default function AboutPage() {
     return (
         <div
@@ -107,7 +70,7 @@ export default function AboutPage() {
                         </p>
                         <div className="space-y-4">
                             {[
-                                { icon: Mail, label: 'Email', value: 'launchoura@gmail.com' },
+                                { icon: Mail, label: 'Email', value: 'info.autofixlk@gmail.com' },
                                 { icon: Phone, label: 'Phone', value: '+94 72 204 9804' },
                                 { icon: MapPin, label: 'Location', value: 'Colombo, Sri Lanka' },
                             ].map(({ icon: Icon, label, value }) => (

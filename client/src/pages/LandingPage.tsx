@@ -2,7 +2,7 @@ import Hero from '../components/landing/Hero';
 import CategoryGrid from '../components/landing/CategoryGrid';
 import ProcessFlow from '../components/landing/ProcessFlow';
 import DualCTA from '../components/landing/DualCTA';
-import AboutContact from '../components/landing/AboutContact';
+
 
 /**
  * Landing page component that assembles all landing sections
@@ -27,7 +27,6 @@ export default function LandingPage() {
                 <CategoryGrid />
                 <ProcessFlow />
                 <DualCTA />
-                <AboutContact />
             </div>
         </div>
     );
