@@ -105,7 +105,7 @@ export class ProviderRepository {
             providerName: s.profile.businessName,
             providerCity: s.profile.city,
             providerDistrict: s.profile.district,
-            providerId: s.profile.id,
+            providerId: s.profile.userId,
             providerPhotoUrl: s.profile.photoUrl ?? undefined,
             rating: 4.5,     // placeholder – no ratings table yet
             reviewCount: 200, // placeholder
@@ -150,7 +150,7 @@ export class ProviderRepository {
             providerName: service.profile.businessName,
             providerCity: service.profile.city,
             providerDistrict: service.profile.district,
-            providerId: service.profile.id,
+            providerId: service.profile.userId,
             providerPhotoUrl: service.profile.photoUrl ?? undefined,
             rating: 4.5,     // placeholder
             reviewCount: 200, // placeholder
