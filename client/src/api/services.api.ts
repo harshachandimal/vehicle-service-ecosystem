@@ -48,3 +48,10 @@ export async function getAvailableServices(
     if (!res.ok) throw new Error('Failed to fetch services');
     return res.json();
 }
+
+/** Fetch a single service by ID */
+export async function getServiceById(id: string): Promise<ServiceListItem> {
+    const res = await fetch(`${API_BASE}/services/${id}`);
+    if (!res.ok) throw new Error('Failed to fetch service details');
+    return res.json();
+}

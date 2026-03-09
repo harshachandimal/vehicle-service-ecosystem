@@ -4,7 +4,7 @@
  */
 
 import { Router } from 'express';
-import { getAvailableServicesHandler } from './provider.controller';
+import { getAvailableServicesHandler, getServiceByIdHandler } from './provider.controller';
 
 const serviceRoutes = Router();
 
@@ -21,5 +21,11 @@ const serviceRoutes = Router();
  * @returns {ServiceListItem[]}  - Array of matching services with provider info
  */
 serviceRoutes.get('/', getAvailableServicesHandler);
+
+/**
+ * GET /api/services/:id
+ * Get a specific service by ID (Public)
+ */
+serviceRoutes.get('/:id', getServiceByIdHandler);
 
 export default serviceRoutes;

@@ -122,4 +122,13 @@ export class ProviderService {
     async getAvailableServices(filters: ServiceFilterDTO): Promise<ServiceListItem[]> {
         return await this.providerRepository.getAvailableServices(filters);
     }
+
+    /**
+     * Get a specific service by ID
+     * @param {string} serviceId - Service ID
+     * @returns Promise with service item or null
+     */
+    async getServiceById(serviceId: string): Promise<ServiceListItem | null> {
+        return await this.providerRepository.getServiceById(serviceId);
+    }
 }

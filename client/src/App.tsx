@@ -10,8 +10,8 @@ import ProviderProfilePage from './pages/ProviderProfilePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import BusinessRegisterPage from './pages/auth/BusinessRegisterPage';
-import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
-import ResetPasswordPage from './pages/auth/ResetPasswordPage';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage'; import ResetPasswordPage from './pages/auth/ResetPasswordPage';
+import CreateBookingPage from './pages/bookings/CreateBookingPage';
 
 
 /**
@@ -40,6 +40,7 @@ function App() {
                   <Route path="/providers" element={<ProvidersPage />} />
                   <Route path="/providers/:id" element={<ProviderProfilePage />} />
                   <Route path="/services" element={<ServicesPage />} />
+                  <Route path="/book/:serviceId" element={<CreateBookingPage />} />
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="/contact" element={<AboutPage />} />
                 </Routes>

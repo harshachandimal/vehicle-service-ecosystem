@@ -86,17 +86,20 @@ model Vehicle {
 /// Booking model
 /// Represents service bookings between owners and providers
 model Booking {
-  id          String        @id @default(uuid())
+  id          String           @id @default(uuid())
   vehicleId   String
   providerId  String
+  serviceId   String?          // Optional link to a specific ProviderService
+  timeSlot    String?          // e.g. "10:00 AM"
   description String
   serviceDate DateTime
-  status      BookingStatus @default(PENDING)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  vehicle     Vehicle       @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
-  provider    User          @relation(fields: [providerId], references: [id], onDelete: Cascade)
-  invoice     Invoice?      // One-to-one relationship with Invoice
+  status      BookingStatus    @default(PENDING)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  vehicle     Vehicle          @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  provider    User             @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  service     ProviderService? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  invoice     Invoice?         // One-to-one relationship with Invoice
 
   @@map("bookings")
 }
@@ -135,6 +138,7 @@ model ProviderService {
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
   profile     ProviderProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  bookings    Booking[]       // Bookings for this specific service
 
   @@map("provider_services")
 }

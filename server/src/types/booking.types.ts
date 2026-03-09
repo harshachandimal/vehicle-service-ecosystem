@@ -28,6 +28,10 @@ export interface Booking {
     vehicleId: string;
     /** ID of the service provider */
     providerId: string;
+    /** ID of the specific service (optional) */
+    serviceId?: string | null;
+    /** Selected time slot (optional) */
+    timeSlot?: string | null;
     /** Description of the service requested */
     description: string;
     /** Scheduled date for the service */
@@ -48,6 +52,10 @@ export interface CreateBookingDTO {
     vehicleId: string;
     /** ID of the provider to perform the service */
     providerId: string;
+    /** ID of the specific service (optional) */
+    serviceId?: string;
+    /** Selected time slot (optional) */
+    timeSlot?: string;
     /** Description of the service requested */
     description: string;
     /** Scheduled date for the service */

@@ -22,6 +22,7 @@ export async function createBookingHandler(
             res.status(400).json({ error: 'Missing required fields' });
             return;
         }
+        // serviceId and timeSlot are optional and correctly passed in data
         const booking = await bookingService.createBooking(ownerId, data);
         res.status(201).json(booking);
     } catch (error) {

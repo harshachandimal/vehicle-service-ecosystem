@@ -5,6 +5,7 @@
 
 import { Clock, Star, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 import type { ServiceListItem } from '../../api/services.api';
 
 const SERVER = import.meta.env.VITE_API_URL?.replace('/api', '') ?? 'http://localhost:3000';
@@ -24,6 +25,7 @@ interface Props { service: ServiceListItem; }
 
 export default function ServiceCard({ service }: Props) {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const grad = GRADIENTS[service.name] ?? DEFAULT_GRADIENT;
     const photoSrc = service.providerPhotoUrl ? `${SERVER}${service.providerPhotoUrl}` : null;
 
@@ -88,7 +90,13 @@ export default function ServiceCard({ service }: Props) {
                         <p className="text-[10px] text-gray-400">Tax included</p>
                     </div>
                     <button
-                        onClick={() => navigate(`/providers/${service.providerId}`)}
+                        onClick={() => {
+                            if (!user) {
+                                navigate('/login', { state: { returnTo: `/book/${service.id}`, message: 'Please log in to book a service.' } });
+                            } else {
+                                navigate(`/book/${service.id}`);
+                            }
+                        }}
                         className="px-5 py-2 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/30"
                     >
                         Book Now

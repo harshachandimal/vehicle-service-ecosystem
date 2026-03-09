@@ -127,6 +127,36 @@ export class ProviderRepository {
         return results;
     }
 
+    /**
+     * Get a specific service by ID
+     * @param {string} serviceId - Service ID
+     * @returns Promise with service item or null
+     */
+    async getServiceById(serviceId: string): Promise<ServiceListItem | null> {
+        const service = await this.prisma.providerService.findUnique({
+            where: { id: serviceId },
+            include: { profile: true },
+        });
+
+        if (!service) return null;
+
+        return {
+            id: service.id,
+            name: service.name,
+            price: parseFloat(service.price.toString()),
+            description: service.description ?? undefined,
+            vehicleType: service.vehicleType ?? undefined,
+            duration: service.duration ?? undefined,
+            providerName: service.profile.businessName,
+            providerCity: service.profile.city,
+            providerDistrict: service.profile.district,
+            providerId: service.profile.id,
+            providerPhotoUrl: service.profile.photoUrl ?? undefined,
+            rating: 4.5,     // placeholder
+            reviewCount: 200, // placeholder
+        };
+    }
+
     /** Derive a display badge from profile data */
     private getBadge(profile: {
         registrationNumber?: string | null;

@@ -201,3 +201,27 @@ export async function getAvailableServicesHandler(
         res.status(500).json({ error: message });
     }
 }
+
+/**
+ * GET /api/services/:id
+ * Get a specific service by ID (Public)
+ */
+export async function getServiceByIdHandler(
+    req: AuthenticatedRequest,
+    res: Response
+): Promise<void> {
+    try {
+        const serviceId = req.params.id;
+        const service = await providerService.getServiceById(serviceId);
+
+        if (!service) {
+            res.status(404).json({ error: 'Service not found' });
+            return;
+        }
+
+        res.status(200).json(service);
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to fetch service details';
+        res.status(500).json({ error: message });
+    }
+}
