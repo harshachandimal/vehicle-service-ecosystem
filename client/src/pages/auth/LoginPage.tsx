@@ -37,8 +37,12 @@ export default function LoginPage() {
 
         setLoading(true);
         try {
-            await login(formData);
-            navigate('/');
+            const user = await login(formData);
+            if (user.role === 'PROVIDER') {
+                navigate('/dashboard/provider');
+            } else {
+                navigate('/');
+            }
         } catch (error: any) {
             setErrors({ general: error.response?.data?.error || error.message || 'Login failed. Please try again.' });
         } finally {

@@ -13,11 +13,11 @@ interface AuthContextType {
     /** Loading state during initial auth check */
     loading: boolean;
     /** Login function */
-    login: (data: LoginRequest) => Promise<void>;
+    login: (data: LoginRequest) => Promise<User>;
     /** Register function for individual users */
-    register: (data: RegisterRequest) => Promise<void>;
+    register: (data: RegisterRequest) => Promise<User>;
     /** Register function for business users */
-    registerBusiness: (data: BusinessRegisterRequest) => Promise<void>;
+    registerBusiness: (data: BusinessRegisterRequest) => Promise<User>;
     /** Logout function */
     logout: () => void;
 }
@@ -66,6 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const login = async (data: LoginRequest) => {
         const response = await authApi.login(data);
         handleAuthResponse(response);
+        return response.user;
     };
 
     /**
@@ -75,6 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const register = async (data: RegisterRequest) => {
         const response = await authApi.register(data);
         handleAuthResponse(response);
+        return response.user;
     };
 
     /**
@@ -84,6 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const registerBusiness = async (data: BusinessRegisterRequest) => {
         const response = await authApi.registerBusiness(data);
         handleAuthResponse(response);
+        return response.user;
     };
 
     /**

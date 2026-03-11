@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Input from '../../components/ui/Input';
+import Input from '../ui/Input';
 import { DISTRICTS } from '../../constants/locations';
 
 

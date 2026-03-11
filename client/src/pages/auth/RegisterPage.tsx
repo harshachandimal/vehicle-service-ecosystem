@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from '../../components/auth/AuthLayout';
 import Button from '../../components/ui/Button';
 import { useAuth } from '../../hooks/useAuth';
-import ProviderCallout from './ProviderCallout';
-import CustomerFormFields from './CustomerFormFields';
+import ProviderCallout from '../../components/auth/ProviderCallout';
+import CustomerFormFields from '../../components/auth/CustomerFormFields';
 
 /**
  * Customer registration page component
@@ -51,8 +51,12 @@ export default function RegisterPage() {
 
         setLoading(true);
         try {
-            await register({ ...formData, role: 'OWNER' });
-            navigate('/');
+            const user = await register({ ...formData, role: 'OWNER' });
+            if (user.role === 'PROVIDER') {
+                navigate('/dashboard/provider');
+            } else {
+                navigate('/');
+            }
         } catch (error: any) {
             setErrors({ general: error.response?.data?.error || error.message || 'Registration failed' });
         } finally {

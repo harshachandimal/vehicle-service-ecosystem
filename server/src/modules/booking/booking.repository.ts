@@ -35,7 +35,7 @@ export class BookingRepository {
         const bookings = await this.prisma.booking.findMany({
             where: { providerId },
             include: { vehicle: { include: { owner: true } }, provider: true, service: true },
-            orderBy: { createdAt: 'desc' },
+            orderBy: { serviceDate: 'asc' },
         });
         return bookings.map(b => this.mapToBookingWithDetails(b));
     }
@@ -74,6 +74,7 @@ export class BookingRepository {
             vehicle: b.vehicle ? {
                 make: b.vehicle.make, model: b.vehicle.model,
                 licensePlate: b.vehicle.licensePlate, ownerName: b.vehicle.owner?.name,
+                ownerPhone: b.vehicle.owner?.phone,
             } : undefined,
             provider: b.provider ? { name: b.provider.name, email: b.provider.email } : undefined,
         };

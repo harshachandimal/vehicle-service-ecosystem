@@ -1,5 +1,5 @@
 import { Building2 } from 'lucide-react';
-import Input from '../../components/ui/Input';
+import Input from '../ui/Input';
 
 /**
  * Essential info section props

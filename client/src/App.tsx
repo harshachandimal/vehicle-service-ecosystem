@@ -12,7 +12,7 @@ import RegisterPage from './pages/auth/RegisterPage';
 import BusinessRegisterPage from './pages/auth/BusinessRegisterPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage'; import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 import CreateBookingPage from './pages/bookings/CreateBookingPage';
-
+import ProviderDashboard from './pages/dashboard/ProviderDashboard';
 
 /**
  * Main application component with routing and authentication provider
@@ -29,6 +29,9 @@ function App() {
           <Route path="/register/business" element={<BusinessRegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+
+          {/* Dashboard routes - no navbar/footer, dashboard has its own sidebar */}
+          <Route path="/dashboard/provider" element={<ProviderDashboard />} />
 
           {/* Main routes - with navbar/footer */}
           <Route path="/*" element={

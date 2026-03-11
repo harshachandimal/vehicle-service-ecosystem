@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from '../../components/auth/AuthLayout';
 import Button from '../../components/ui/Button';
 import { useAuth } from '../../hooks/useAuth';
-import EssentialInfoSection from './EssentialInfoSection';
-import LocationSection from './LocationSection';
-import DetailsSection from './DetailsSection';
+import EssentialInfoSection from '../../components/auth/EssentialInfoSection';
+import LocationSection from '../../components/auth/LocationSection';
+import DetailsSection from '../../components/auth/DetailsSection';
 
 /**
  * Business registration page component for service providers
@@ -56,7 +56,7 @@ export default function BusinessRegisterPage() {
 
         setLoading(true);
         try {
-            await registerBusiness({
+            const user = await registerBusiness({
                 name: formData.businessName,
                 email: formData.email,
                 password: formData.password,
@@ -70,7 +70,11 @@ export default function BusinessRegisterPage() {
                 businessDescription: formData.businessDescription,
                 registrationNumber: formData.registrationNumber,
             });
-            navigate('/');
+            if (user.role === 'PROVIDER') {
+                navigate('/dashboard/provider');
+            } else {
+                navigate('/');
+            }
         } catch (error: any) {
             setErrors({ general: error.response?.data?.error || error.message || 'Registration failed' });
         } finally {

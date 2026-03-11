@@ -80,6 +80,7 @@ export interface BookingWithDetails extends Booking {
         model: string;
         licensePlate: string;
         ownerName?: string;
+        ownerPhone?: string;
     };
     /** Provider information */
     provider?: {
