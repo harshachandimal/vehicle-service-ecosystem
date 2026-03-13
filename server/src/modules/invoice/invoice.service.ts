@@ -1,6 +1,6 @@
 import { InvoiceRepository } from './invoice.repository';
 import { BookingRepository } from '../booking/booking.repository';
-import { Invoice, CreateInvoiceDTO, InvoiceWithDetails } from '../../types/invoice.types';
+import { Invoice, CreateInvoiceDTO, InvoiceWithDetails, InvoiceStatus } from '../../types/invoice.types';
 import { BookingStatus } from '../../types/booking.types';
 
 /**
@@ -63,6 +63,43 @@ export class InvoiceService {
     }
 
     /**
+     * Update an existing invoice
+     */
+    async updateInvoice(providerId: string, id: string, data: CreateInvoiceDTO): Promise<Invoice> {
+        const invoice = await this.invoiceRepository.findById(id);
+        if (!invoice) throw new Error('Invoice not found');
+
+        if (invoice.booking?.providerId !== providerId) {
+            throw new Error('Access denied. Not your invoice');
+        }
+
+        if (invoice.status !== InvoiceStatus.DRAFT) {
+            throw new Error('Cannot edit a finalized invoice');
+        }
+
+        const amount = data.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        return this.invoiceRepository.updateItems(id, data.items, amount);
+    }
+
+    /**
+     * Finalize an invoice to prevent further editing
+     */
+    async finalizeInvoice(providerId: string, id: string): Promise<Invoice> {
+        const invoice = await this.invoiceRepository.findById(id);
+        if (!invoice) throw new Error('Invoice not found');
+
+        if (invoice.booking?.providerId !== providerId) {
+            throw new Error('Access denied. Not your invoice');
+        }
+
+        if (invoice.status !== InvoiceStatus.DRAFT) {
+            throw new Error('Invoice is already finalized or paid');
+        }
+
+        return this.invoiceRepository.updateStatus(id, 'UNPAID' as any);
+    }
+
+    /**
      * Get invoices by user role
      * Smart dispatcher that calls appropriate repository method based on role
      * 
@@ -87,5 +124,15 @@ export class InvoiceService {
      */
     async getInvoiceById(id: string): Promise<InvoiceWithDetails | null> {
         return this.invoiceRepository.findById(id);
+    }
+
+    /** Get invoice by booking ID */
+    async getInvoiceByBookingId(bookingId: string): Promise<InvoiceWithDetails | null> {
+        return this.invoiceRepository.findByBookingId(bookingId);
+    }
+
+    /** Pay an invoice */
+    async payInvoice(id: string): Promise<Invoice> {
+        return this.invoiceRepository.updateStatus(id, 'PAID' as any);
     }
 }

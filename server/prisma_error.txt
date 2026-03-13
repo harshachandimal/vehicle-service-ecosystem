@@ -1,0 +1,24 @@
+
+Invalid `prisma.invoice.create()` invocation in
+D:\vehicle-service-ecosystem\server\tmp_test_invoice.ts:17:30
+
+  14     return;
+  15 }
+  16 
+→ 17 await prisma.invoice.create({
+       data: {
+         bookingId: "61b4b9ee-b7cd-4670-bf47-b9a113094b03",
+         amount: 100,
+         status: "DRAFT",
+                 ~~~~~~~
+         items: [
+           {
+             description: "Test",
+             price: 100,
+             quantity: 1
+           }
+         ]
+       }
+     })
+
+Invalid value for argument `status`. Expected InvoiceStatus.

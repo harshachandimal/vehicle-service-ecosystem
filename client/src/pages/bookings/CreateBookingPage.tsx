@@ -5,7 +5,7 @@ import VehicleSelection from '../../components/bookings/VehicleSelection';
 import DateTimeSelection from '../../components/bookings/DateTimeSelection';
 import BookingNotes from '../../components/bookings/BookingNotes';
 import BookingSuccess from '../../components/bookings/BookingSuccess';
-import { useCreateBooking } from './useCreateBooking';
+import { useCreateBooking } from '../../hooks/useCreateBooking';
 
 // Time slots available for booking
 const TIME_SLOTS = [

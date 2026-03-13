@@ -5,13 +5,14 @@ import { bookingApi } from '../../api/booking.api';
 import type { BookingResponse } from '../../api/booking.api';
 import BookingList from '../../components/dashboard/BookingList';
 import ProviderSidebar from '../../components/dashboard/ProviderSidebar';
-import { FileText, AlertCircle, RefreshCw } from 'lucide-react';
+import { FileText, AlertCircle, RefreshCw, Search } from 'lucide-react';
 
 export default function ProviderDashboard() {
     const { user, token, loading: authLoading } = useAuth();
     const [bookings, setBookings] = useState<BookingResponse[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const fetchBookings = async () => {
         setIsLoading(true);
@@ -46,6 +47,20 @@ export default function ProviderDashboard() {
     const pendingRequests = useMemo(() => bookings.filter(b => b.status === 'PENDING').length, [bookings]);
     const upcomingAppointments = useMemo(() => bookings.filter(b => b.status === 'ACCEPTED' || b.status === 'IN_PROGRESS').length, [bookings]);
     const completedServices = useMemo(() => bookings.filter(b => b.status === 'COMPLETED').length, [bookings]);
+
+    // Search filter
+    const filteredBookings = useMemo(() => {
+        if (!searchQuery.trim()) return bookings;
+        const query = searchQuery.toLowerCase();
+        return bookings.filter(b => 
+            (b.service?.name || 'General Service').toLowerCase().includes(query) ||
+            (b.vehicle?.ownerName || '').toLowerCase().includes(query) ||
+            (b.vehicle?.make || '').toLowerCase().includes(query) ||
+            (b.vehicle?.model || '').toLowerCase().includes(query) ||
+            (b.vehicle?.licensePlate || '').toLowerCase().includes(query) ||
+            (b.description || '').toLowerCase().includes(query)
+        );
+    }, [bookings, searchQuery]);
 
     if (authLoading) {
         return <div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div></div>;
@@ -96,7 +111,21 @@ export default function ProviderDashboard() {
 
                 {/* Bookings Area */}
                 <div className="mb-8">
-                    <h2 className="text-2xl font-bold text-slate-800 mb-8 tracking-tight">Recent Bookings</h2>
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                        <h2 className="text-2xl font-bold text-slate-800 tracking-tight">Recent Bookings</h2>
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <Search className="h-4 w-4 text-slate-400" />
+                            </div>
+                            <input
+                                type="text"
+                                placeholder="Search service, customer, vehicle..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="block w-full md:w-80 pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl leading-5 bg-white shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm"
+                            />
+                        </div>
+                    </div>
                     {isLoading ? (
                         <div className="flex justify-center p-16">
                             <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin shadow-lg"></div>
@@ -106,7 +135,7 @@ export default function ProviderDashboard() {
                             {error}
                         </div>
                     ) : (
-                        <BookingList bookings={bookings} onStatusUpdate={handleStatusUpdate} />
+                        <BookingList bookings={filteredBookings} onStatusUpdate={handleStatusUpdate} />
                     )}
                 </div>
             </main>

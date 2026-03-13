@@ -15,7 +15,11 @@ export default function BookingList({ bookings, onStatusUpdate }: BookingListPro
     const pendingBookings = useMemo(() => bookings.filter(b => b.status === 'PENDING'), [bookings]);
     const acceptedBookings = useMemo(() => bookings.filter(b => b.status === 'ACCEPTED'), [bookings]);
     const inProgressBookings = useMemo(() => bookings.filter(b => b.status === 'IN_PROGRESS'), [bookings]);
-    const completedBookings = useMemo(() => bookings.filter(b => b.status === 'COMPLETED'), [bookings]);
+    const completedBookings = useMemo(() => {
+        return bookings
+            .filter(b => b.status === 'COMPLETED')
+            .sort((a, b) => new Date(b.serviceDate).getTime() - new Date(a.serviceDate).getTime());
+    }, [bookings]);
     const cancelledBookings = useMemo(() => bookings.filter(b => b.status === 'REJECTED' || b.status === 'CANCELLED'), [bookings]);
 
     const getDisplayedBookings = () => {
@@ -58,46 +62,46 @@ export default function BookingList({ bookings, onStatusUpdate }: BookingListPro
         <div className="space-y-6">
             {/* Tabs */}
             <div className="flex flex-wrap gap-2 mb-6">
-                <TabButton 
-                    label="Pending Requests" 
-                    count={pendingBookings.length} 
-                    isActive={activeTab === 'PENDING'} 
-                    onClick={() => setActiveTab('PENDING')} 
+                <TabButton
+                    label="Pending Requests"
+                    count={pendingBookings.length}
+                    isActive={activeTab === 'PENDING'}
+                    onClick={() => setActiveTab('PENDING')}
                     activeColor="bg-amber-100 text-amber-800"
                 />
-                <TabButton 
-                    label="Upcoming" 
-                    count={acceptedBookings.length} 
-                    isActive={activeTab === 'ACCEPTED'} 
-                    onClick={() => setActiveTab('ACCEPTED')} 
+                <TabButton
+                    label="Upcoming"
+                    count={acceptedBookings.length}
+                    isActive={activeTab === 'ACCEPTED'}
+                    onClick={() => setActiveTab('ACCEPTED')}
                     activeColor="bg-blue-100 text-blue-800"
                 />
-                <TabButton 
-                    label="Ongoing" 
-                    count={inProgressBookings.length} 
-                    isActive={activeTab === 'IN_PROGRESS'} 
-                    onClick={() => setActiveTab('IN_PROGRESS')} 
+                <TabButton
+                    label="Ongoing"
+                    count={inProgressBookings.length}
+                    isActive={activeTab === 'IN_PROGRESS'}
+                    onClick={() => setActiveTab('IN_PROGRESS')}
                     activeColor="bg-cyan-100 text-cyan-800"
                 />
-                <TabButton 
-                    label="Completed" 
-                    count={completedBookings.length} 
-                    isActive={activeTab === 'COMPLETED'} 
-                    onClick={() => setActiveTab('COMPLETED')} 
+                <TabButton
+                    label="Completed"
+                    count={completedBookings.length}
+                    isActive={activeTab === 'COMPLETED'}
+                    onClick={() => setActiveTab('COMPLETED')}
                     activeColor="bg-emerald-100 text-emerald-800"
                 />
-                <TabButton 
-                    label="Cancelled" 
-                    count={cancelledBookings.length} 
-                    isActive={activeTab === 'CANCELLED'} 
-                    onClick={() => setActiveTab('CANCELLED')} 
+                <TabButton
+                    label="Cancelled"
+                    count={cancelledBookings.length}
+                    isActive={activeTab === 'CANCELLED'}
+                    onClick={() => setActiveTab('CANCELLED')}
                     activeColor="bg-slate-200 text-slate-700"
                 />
             </div>
 
             {/* Content Area */}
             {displayedBookings.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="flex flex-col gap-4">
                     {displayedBookings.map((booking) => (
                         <BookingCard
                             key={booking.id}

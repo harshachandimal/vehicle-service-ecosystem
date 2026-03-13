@@ -87,4 +87,8 @@ export interface BookingWithDetails extends Booking {
         name: string;
         email: string;
     };
+    invoice?: {
+        id: string;
+        status: string;
+    };
 }

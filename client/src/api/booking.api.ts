@@ -33,6 +33,10 @@ export interface BookingResponse {
         name: string;
         email: string;
     };
+    invoice?: {
+        id: string;
+        status: string;
+    };
 }
 
 export const bookingApi = {
@@ -50,6 +54,15 @@ export const bookingApi = {
      */
     getProviderBookings: async (): Promise<BookingResponse[]> => {
         const response = await api.get<BookingResponse[]>('/api/bookings/provider');
+        return response.data;
+    },
+
+    /**
+     * Get a specific booking by ID
+     * @param id - Booking ID
+     */
+    getBookingById: async (id: string): Promise<BookingResponse> => {
+        const response = await api.get<BookingResponse>(`/api/bookings/${id}`);
         return response.data;
     },
 

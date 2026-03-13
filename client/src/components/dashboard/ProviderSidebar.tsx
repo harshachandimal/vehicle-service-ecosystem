@@ -12,7 +12,7 @@ export default function ProviderSidebar() {
     };
 
     return (
-        <aside className="w-64 bg-slate-900 border-r border-slate-800 shadow-[4px_0_24px_rgba(0,0,0,0.1)] hidden md:flex flex-col justify-between z-10">
+        <aside className="w-64 bg-slate-900 border-r border-slate-800 shadow-[4px_0_24px_rgba(0,0,0,0.1)] hidden md:flex flex-col justify-between z-10 sticky top-0 h-screen">
             <div>
                 <div className="p-8">
                     <h2 className="text-2xl font-black tracking-tight bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">AutoFix</h2>

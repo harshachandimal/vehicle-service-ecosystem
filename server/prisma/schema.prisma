@@ -40,6 +40,7 @@ enum ServiceCategory {
 /// Invoice status enumeration
 /// Represents the payment status of an invoice
 enum InvoiceStatus {
+  DRAFT
   UNPAID
   PAID
 }
@@ -149,7 +150,7 @@ model Invoice {
   id        String        @id @default(uuid())
   bookingId String        @unique // One-to-one constraint
   amount    Decimal       @db.Decimal(10, 2)
-  status    InvoiceStatus @default(UNPAID)
+  status    InvoiceStatus @default(DRAFT)
   items     Json          // JSONB column for price snapshot
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt

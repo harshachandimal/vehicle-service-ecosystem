@@ -39,6 +39,30 @@ invoiceRoutes.post(
 );
 
 /**
+ * PUT /api/invoices/:id
+ * Update a draft invoice
+ * 
+ * @access Provider only
+ */
+invoiceRoutes.put(
+    '/:id',
+    authorize([UserRole.PROVIDER]),
+    (req: AuthenticatedRequest, res) => invoiceController.updateInvoice(req, res)
+);
+
+/**
+ * PATCH /api/invoices/:id/finalize
+ * Finalize a draft invoice
+ * 
+ * @access Provider only
+ */
+invoiceRoutes.patch(
+    '/:id/finalize',
+    authorize([UserRole.PROVIDER]),
+    (req: AuthenticatedRequest, res) => invoiceController.finalizeInvoice(req, res)
+);
+
+/**
  * GET /api/invoices
  * Retrieve all invoices for the authenticated user (role-based)
  * 
@@ -61,6 +85,24 @@ invoiceRoutes.get(
 invoiceRoutes.get(
     '/:id',
     (req: AuthenticatedRequest, res) => invoiceController.getInvoiceById(req, res)
+);
+
+/**
+ * GET /api/invoices/booking/:bookingId
+ * Retrieve an invoice by booking ID
+ */
+invoiceRoutes.get(
+    '/booking/:bookingId',
+    (req: AuthenticatedRequest, res) => invoiceController.getInvoiceByBookingId(req, res)
+);
+
+/**
+ * PATCH /api/invoices/:id/pay
+ * Pay an invoice
+ */
+invoiceRoutes.patch(
+    '/:id/pay',
+    (req: AuthenticatedRequest, res) => invoiceController.payInvoice(req, res)
 );
 
 export default invoiceRoutes;

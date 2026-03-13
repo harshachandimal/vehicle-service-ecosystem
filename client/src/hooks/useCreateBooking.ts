@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import { getServiceById } from '../../api/services.api';
-import type { ServiceListItem } from '../../api/services.api';
-import { vehicleApi } from '../../api/vehicle.api';
-import type { Vehicle } from '../../api/vehicle.api';
-import { bookingApi } from '../../api/booking.api';
+import { useAuth } from './useAuth';
+import { getServiceById } from '../api/services.api';
+import type { ServiceListItem } from '../api/services.api';
+import { vehicleApi } from '../api/vehicle.api';
+import type { Vehicle } from '../api/vehicle.api';
+import { bookingApi } from '../api/booking.api';
 
 export function useCreateBooking(serviceId: string | undefined) {
     const navigate = useNavigate();

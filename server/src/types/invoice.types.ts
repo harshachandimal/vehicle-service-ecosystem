@@ -3,6 +3,8 @@
  * Represents the payment status of an invoice
  */
 export enum InvoiceStatus {
+    /** Invoice is still being edited */
+    DRAFT = 'DRAFT',
     /** Invoice has not been paid */
     UNPAID = 'UNPAID',
     /** Invoice has been paid */

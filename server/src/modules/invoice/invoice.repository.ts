@@ -12,9 +12,18 @@ export class InvoiceRepository {
             data: {
                 bookingId: data.bookingId,
                 amount: data.amount,
-                status: (data.status || InvoiceStatus.UNPAID) as PrismaInvoiceStatus,
+                status: (data.status || InvoiceStatus.DRAFT) as PrismaInvoiceStatus,
                 items: data.items as any,
             },
+        });
+        return this.mapToInvoice(invoice);
+    }
+
+    /** @param {string} id @param {any} items @param {number} amount @returns {Promise<Invoice>} */
+    async updateItems(id: string, items: any, amount: number): Promise<Invoice> {
+        const invoice = await this.prisma.invoice.update({
+            where: { id },
+            data: { items, amount }
         });
         return this.mapToInvoice(invoice);
     }
@@ -32,10 +41,19 @@ export class InvoiceRepository {
         return invoice ? this.mapToInvoiceWithDetails(invoice) : null;
     }
 
-    /** @param {string} bookingId @returns {Promise<Invoice|null>} Invoice for booking */
-    async findByBookingId(bookingId: string): Promise<Invoice | null> {
-        const invoice = await this.prisma.invoice.findUnique({ where: { bookingId } });
-        return invoice ? this.mapToInvoice(invoice) : null;
+    /** @param {string} bookingId @returns {Promise<InvoiceWithDetails|null>} Invoice for booking */
+    async findByBookingId(bookingId: string): Promise<InvoiceWithDetails | null> {
+        const invoice = await this.prisma.invoice.findUnique({
+            where: { bookingId },
+            include: { booking: { include: { vehicle: true, provider: { include: { providerProfile: true } } } } },
+        });
+        return invoice ? this.mapToInvoiceWithDetails(invoice) : null;
+    }
+
+    /** @param {string} id @param {PrismaInvoiceStatus} status @returns {Promise<Invoice>} */
+    async updateStatus(id: string, status: PrismaInvoiceStatus): Promise<Invoice> {
+        const invoice = await this.prisma.invoice.update({ where: { id }, data: { status } });
+        return this.mapToInvoice(invoice);
     }
 
     /** @param {string} ownerId @returns {Promise<InvoiceWithDetails[]>} Owner's invoices */
