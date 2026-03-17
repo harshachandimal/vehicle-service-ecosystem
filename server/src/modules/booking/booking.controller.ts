@@ -97,3 +97,28 @@ export async function updateStatusHandler(
         res.status(400).json({ error: msg });
     }
 }
+
+/**
+ * Get a specific booking by ID - GET /api/bookings/:id
+ * @param {AuthenticatedRequest} req @param {Response} res
+ */
+export async function getBookingHandler(
+    req: AuthenticatedRequest, res: Response
+): Promise<void> {
+    try {
+        const userId = req.user!.userId;
+        const bookingId = req.params.id;
+        const booking = await bookingService.getBookingById(bookingId, userId);
+        
+        if (!booking) {
+            res.status(404).json({ error: 'Booking not found' });
+            return;
+        }
+        
+        res.status(200).json(booking);
+    } catch (error) {
+        const msg = error instanceof Error ? error.message : 'Failed to fetch booking';
+        const statusCode = msg.includes('Access denied') ? 403 : 500;
+        res.status(statusCode).json({ error: msg });
+    }
+}

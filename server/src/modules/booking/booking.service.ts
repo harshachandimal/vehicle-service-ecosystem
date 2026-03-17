@@ -88,4 +88,34 @@ export class BookingService {
         validateStatusTransition(booking.status, newStatus);
         return this.bookingRepository.updateStatus(bookingId, newStatus);
     }
+
+    /**
+     * Get a specific booking by ID with authorization check
+     * 
+     * @param {string} bookingId - The booking ID to retrieve
+     * @param {string} userId - The requesting user's ID
+     * @returns {Promise<BookingWithDetails | null>} The booking if authorized
+     * @throws {Error} If authorized but booking not found, or if access denied
+     */
+    async getBookingById(bookingId: string, userId: string): Promise<BookingWithDetails | null> {
+        const booking = await this.bookingRepository.findById(bookingId);
+        if (!booking) return null;
+
+        // Check ownership/assignment from the database via Prisma to be sure
+        const rawBooking = await this.prisma.booking.findUnique({
+            where: { id: bookingId },
+            include: { vehicle: true }
+        });
+
+        if (!rawBooking) return null;
+
+        const isOwner = rawBooking.vehicle.ownerId === userId;
+        const isProvider = rawBooking.providerId === userId;
+
+        if (!isOwner && !isProvider) {
+            throw new Error('Access denied. You are not authorized to view this booking');
+        }
+
+        return booking;
+    }
 }

@@ -10,7 +10,8 @@ import ProviderProfilePage from './pages/ProviderProfilePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import BusinessRegisterPage from './pages/auth/BusinessRegisterPage';
-import ForgotPasswordPage from './pages/auth/ForgotPasswordPage'; import ResetPasswordPage from './pages/auth/ResetPasswordPage';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage'; 
+import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 import CreateBookingPage from './pages/bookings/CreateBookingPage';
 import ProviderDashboard from './pages/dashboard/provider/ProviderDashboard';
 import ProviderBookingDetails from './pages/dashboard/provider/ProviderBookingDetails';
@@ -19,6 +20,8 @@ import ProfileSettings from './pages/dashboard/provider/ProfileSettings';
 import OwnerDashboard from './pages/dashboard/owner/OwnerDashboard';
 import MyVehicles from './pages/dashboard/owner/MyVehicles';
 import VehicleDetails from './pages/dashboard/owner/VehicleDetails';
+import ServiceHistory from './pages/dashboard/owner/ServiceHistory';
+import BookingDetails from './pages/dashboard/owner/BookingDetails';
 
 /**
  * Main application component with routing and authentication provider
@@ -44,6 +47,8 @@ function App() {
           <Route path="/dashboard/owner" element={<OwnerDashboard />} />
           <Route path="/dashboard/owner/vehicles" element={<MyVehicles />} />
           <Route path="/dashboard/owner/vehicles/:id" element={<VehicleDetails />} />
+          <Route path="/dashboard/owner/history" element={<ServiceHistory />} />
+          <Route path="/dashboard/owner/bookings/:id" element={<BookingDetails />} />
 
           {/* Main routes - with navbar/footer */}
           <Route path="/*" element={

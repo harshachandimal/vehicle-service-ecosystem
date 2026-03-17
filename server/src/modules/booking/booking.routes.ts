@@ -7,6 +7,7 @@ import {
     getMyBookingsHandler,
     getOwnerBookingsHandler,
     updateStatusHandler,
+    getBookingHandler,
 } from './booking.controller';
 
 /**
@@ -65,5 +66,11 @@ bookingRoutes.get('/owner', authorize([UserRole.OWNER]), getOwnerBookingsHandler
  * @returns {Booking} Updated booking object
  */
 bookingRoutes.patch('/:id/status', authorize([UserRole.PROVIDER]), updateStatusHandler);
+
+/**
+ * GET /api/bookings/:id
+ * Retrieve a specific booking by ID
+ */
+bookingRoutes.get('/:id', authorize([UserRole.OWNER, UserRole.PROVIDER]), getBookingHandler);
 
 export default bookingRoutes;
