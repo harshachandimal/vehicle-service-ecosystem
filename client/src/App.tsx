@@ -15,6 +15,7 @@ import CreateBookingPage from './pages/bookings/CreateBookingPage';
 import ProviderDashboard from './pages/dashboard/ProviderDashboard';
 import ProviderBookingDetails from './pages/dashboard/ProviderBookingDetails';
 import MyServices from './pages/dashboard/MyServices';
+import ProfileSettings from './pages/dashboard/ProfileSettings';
 
 /**
  * Main application component with routing and authentication provider
@@ -36,6 +37,7 @@ function App() {
           <Route path="/dashboard/provider" element={<ProviderDashboard />} />
           <Route path="/dashboard/provider/bookings/:id" element={<ProviderBookingDetails />} />
           <Route path="/dashboard/provider/services" element={<MyServices />} />
+          <Route path="/dashboard/provider/settings" element={<ProfileSettings />} />
 
           {/* Main routes - with navbar/footer */}
           <Route path="/*" element={

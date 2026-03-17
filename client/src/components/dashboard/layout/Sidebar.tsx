@@ -43,14 +43,14 @@ export default function ProviderSidebar() {
                         <Wrench className={`w-5 h-5 ${isActive('/dashboard/provider/services') ? 'text-blue-400' : 'text-slate-500'}`} /> My Services
                     </Link>
                     <Link 
-                        to="/providers" 
+                        to="/dashboard/provider/settings" 
                         className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl font-medium transition-all ${
-                            isActive('/providers') 
+                            isActive('/dashboard/provider/settings') 
                                 ? 'bg-blue-600/20 text-blue-400' 
                                 : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
                         }`}
                     >
-                        <User className={`w-5 h-5 ${isActive('/providers') ? 'text-blue-400' : 'text-slate-500'}`} /> Profile Settings
+                        <User className={`w-5 h-5 ${isActive('/dashboard/provider/settings') ? 'text-blue-400' : 'text-slate-500'}`} /> Profile Settings
                     </Link>
                 </nav>
             </div>
