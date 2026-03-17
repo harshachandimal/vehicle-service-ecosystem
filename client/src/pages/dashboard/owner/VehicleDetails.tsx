@@ -16,8 +16,17 @@ const VehicleDetails: React.FC = () => {
     error,
     uploading,
     imageSuccess,
-    updatePhoto
+    updatePhoto,
+    deleteVehicle,
+    updateVehicle
   } = useVehicleDetails(id);
+
+  const handleDelete = async () => {
+    const success = await deleteVehicle();
+    if (success) {
+      navigate('/dashboard/owner/vehicles');
+    }
+  };
 
   if (loading) {
     return (
@@ -84,7 +93,11 @@ const VehicleDetails: React.FC = () => {
             />
 
             {/* Technical Specifications */}
-            <VehicleSpecsSection vehicle={vehicle} />
+            <VehicleSpecsSection 
+              vehicle={vehicle} 
+              onDelete={handleDelete}
+              onUpdate={updateVehicle}
+            />
           </div>
         </div>
       </main>

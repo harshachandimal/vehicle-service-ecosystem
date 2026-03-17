@@ -121,3 +121,24 @@ export async function deleteVehicleHandler(
         res.status(400).json({ error: message });
     }
 }
+
+/**
+ * Handle updating vehicle information
+ * Protected: Owner only
+ */
+export async function updateVehicleHandler(
+    req: AuthenticatedRequest,
+    res: Response
+): Promise<void> {
+    try {
+        const ownerId = req.user!.userId;
+        const vehicleId = req.params.id;
+        const data = req.body;
+
+        const vehicle = await vehicleService.updateVehicle(vehicleId, ownerId, data);
+        res.status(200).json(vehicle);
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to update vehicle';
+        res.status(400).json({ error: message });
+    }
+}

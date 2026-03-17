@@ -59,4 +59,19 @@ export const vehicleApi = {
         });
         return response.data;
     },
+
+    /**
+     * Update vehicle details
+     */
+    updateVehicle: async (id: string, data: Partial<CreateVehicleDTO>): Promise<Vehicle> => {
+        const response = await api.put<Vehicle>(`/api/vehicles/${id}`, data);
+        return response.data;
+    },
+
+    /**
+     * Delete a vehicle by ID
+     */
+    deleteVehicle: async (id: string): Promise<void> => {
+        await api.delete(`/api/vehicles/${id}`);
+    },
 };

@@ -8,6 +8,7 @@ import {
     getVehicleDetailsHandler,
     updateVehiclePhotoHandler,
     deleteVehicleHandler,
+    updateVehicleHandler,
 } from './vehicle.controller';
 
 const vehicleRoutes = Router();
@@ -42,6 +43,13 @@ vehicleRoutes.get('/:id', authorize([UserRole.OWNER]), getVehicleDetailsHandler)
  * @access  Protected (Owner only)
  */
 vehicleRoutes.patch('/:id/photo', authorize([UserRole.OWNER]), uploadPhoto, updateVehiclePhotoHandler);
+
+/**
+ * @route   PUT /api/vehicles/:id
+ * @desc    Update vehicle details
+ * @access  Protected (Owner only)
+ */
+vehicleRoutes.put('/:id', authorize([UserRole.OWNER]), updateVehicleHandler);
 
 /**
  * @route   DELETE /api/vehicles/:id

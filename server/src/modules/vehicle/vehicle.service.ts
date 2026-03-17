@@ -98,4 +98,28 @@ export class VehicleService {
         }
         return true;
     }
+
+    /**
+     * Update vehicle information
+     * 
+     * @param {string} id - The vehicle ID
+     * @param {string} ownerId - The owner's ID
+     * @param {UpdateVehicleDTO} data - The data to update
+     * @returns {Promise<Vehicle>} The updated vehicle
+     * @throws {Error} If validation fails or access denied
+     */
+    async updateVehicle(id: string, ownerId: string, data: any): Promise<Vehicle> {
+        // First check if vehicle exists and belongs to owner
+        await this.getVehicleById(id, ownerId);
+
+        // Basic validation if fields are provided
+        if (data.year) {
+            const currentYear = new Date().getFullYear();
+            if (data.year < 1900 || data.year > currentYear + 1) {
+                throw new Error('Invalid vehicle year');
+            }
+        }
+
+        return this.vehicleRepository.update(id, data);
+    }
 }

@@ -44,6 +44,37 @@ export const useVehicleDetails = (id: string | undefined) => {
     }
   };
 
+  const deleteVehicle = async () => {
+    if (!id) return false;
+
+    try {
+      setLoading(true);
+      await vehicleApi.deleteVehicle(id);
+      return true;
+    } catch (err) {
+      setError('Failed to delete vehicle.');
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateVehicle = async (data: Partial<Vehicle>) => {
+    if (!id) return null;
+
+    try {
+      setLoading(true);
+      const updatedVehicle = await vehicleApi.updateVehicle(id, data as any);
+      setVehicle(updatedVehicle);
+      return updatedVehicle;
+    } catch (err) {
+      setError('Failed to update vehicle details.');
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     vehicle,
     loading,
@@ -51,6 +82,8 @@ export const useVehicleDetails = (id: string | undefined) => {
     uploading,
     imageSuccess,
     updatePhoto,
+    deleteVehicle,
+    updateVehicle,
     setError
   };
 };
