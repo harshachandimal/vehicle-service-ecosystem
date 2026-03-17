@@ -11,6 +11,7 @@ import { UserRole } from '../../types/user.types';
 import {
     updateProfileHandler,
     addServiceHandler,
+    updateServiceHandler,
     removeServiceHandler,
     getMyProfileHandler,
     getProviderByIdHandler,
@@ -80,6 +81,22 @@ providerRoutes.delete(
     authenticate,
     authorize([UserRole.PROVIDER]),
     removeServiceHandler
+);
+
+/**
+ * PATCH /api/providers/services/:id
+ * Update service item in catalog
+ * Protected: PROVIDER only
+ * 
+ * @param {string} id - Service ID to update
+ * @body {UpdateServiceItemDTO} - Updated service data
+ * @returns {ProviderService} - Updated service item
+ */
+providerRoutes.patch(
+    '/services/:id',
+    authenticate,
+    authorize([UserRole.PROVIDER]),
+    updateServiceHandler
 );
 
 /**

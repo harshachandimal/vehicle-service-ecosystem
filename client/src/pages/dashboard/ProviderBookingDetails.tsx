@@ -1,14 +1,14 @@
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useProviderBooking } from '../../hooks/useProviderBooking';
-import StatusBadge from '../../components/dashboard/StatusBadge';
-import { ProviderBookingHeader } from '../../components/dashboard/booking-details/ProviderBookingHeader';
-import { ProviderCustomerInfo } from '../../components/dashboard/booking-details/ProviderCustomerInfo';
-import { ProviderVehicleInfo } from '../../components/dashboard/booking-details/ProviderVehicleInfo';
-import { ProviderBookingNotes } from '../../components/dashboard/booking-details/ProviderBookingNotes';
-import { ProviderBookingLoading } from '../../components/dashboard/booking-details/ProviderBookingLoading';
-import { ProviderBookingError } from '../../components/dashboard/booking-details/ProviderBookingError';
-import { ProviderBookingFooter } from '../../components/dashboard/booking-details/ProviderBookingFooter';
+import StatusBadge from '../../components/dashboard/shared/StatusBadge';
+import { ProviderBookingHeader } from '../../components/dashboard/bookings/details/ProviderBookingHeader';
+import { ProviderCustomerInfo } from '../../components/dashboard/bookings/details/ProviderCustomerInfo';
+import { ProviderVehicleInfo } from '../../components/dashboard/bookings/details/ProviderVehicleInfo';
+import { ProviderBookingNotes } from '../../components/dashboard/bookings/details/ProviderBookingNotes';
+import { ProviderBookingLoading } from '../../components/dashboard/bookings/details/ProviderBookingLoading';
+import { ProviderBookingError } from '../../components/dashboard/bookings/details/ProviderBookingError';
+import { ProviderBookingFooter } from '../../components/dashboard/bookings/details/ProviderBookingFooter';
 import { ArrowLeft } from 'lucide-react';
 import { isServiceTimePassed } from '../../utils/date.util';
 
@@ -42,10 +42,10 @@ export default function ProviderBookingDetails() {
                             <ProviderVehicleInfo make={vehicle?.make} model={vehicle?.model} licensePlate={vehicle?.licensePlate} />
                         </div>
                         <ProviderBookingNotes description={booking.description} />
-                        <ProviderBookingFooter 
-                            booking={booking} status={status} 
-                            isProvider={user?.role === 'PROVIDER'} isOwner={user?.role === 'OWNER'} 
-                            canStartService={canStartService} onStatusUpdate={handleStatusUpdate} onInvoiceSuccess={refetch} 
+                        <ProviderBookingFooter
+                            booking={booking} status={status}
+                            isProvider={user?.role === 'PROVIDER'} isOwner={user?.role === 'OWNER'}
+                            canStartService={canStartService} onStatusUpdate={handleStatusUpdate} onInvoiceSuccess={refetch}
                         />
                     </div>
                 </div>

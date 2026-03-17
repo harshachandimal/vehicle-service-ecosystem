@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { invoiceApi, type Invoice } from '../../api/invoice.api';
+import { invoiceApi, type Invoice } from '../../../api/invoice.api';
 import { CheckCircle, CreditCard, Receipt, Loader2, Lock } from 'lucide-react';
 
 interface Props {

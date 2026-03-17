@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import type { BookingResponse } from '../../api/booking.api';
+import type { BookingResponse } from '../../../api/booking.api';
 import { Calendar, Clock, User, Car, Phone, ChevronRight } from 'lucide-react';
-import StatusBadge from './StatusBadge';
-import InvoiceBadge from './InvoiceBadge';
+import StatusBadge from '../shared/StatusBadge';
+import InvoiceBadge from '../invoices/InvoiceBadge';
 import BookingActions from './BookingActions';
-import { isServiceTimePassed } from '../../utils/date.util';
+import { isServiceTimePassed } from '../../../utils/date.util';
 
 interface BookingCardProps {
     booking: BookingResponse;

@@ -14,6 +14,7 @@ import ForgotPasswordPage from './pages/auth/ForgotPasswordPage'; import ResetPa
 import CreateBookingPage from './pages/bookings/CreateBookingPage';
 import ProviderDashboard from './pages/dashboard/ProviderDashboard';
 import ProviderBookingDetails from './pages/dashboard/ProviderBookingDetails';
+import MyServices from './pages/dashboard/MyServices';
 
 /**
  * Main application component with routing and authentication provider
@@ -34,6 +35,7 @@ function App() {
           {/* Dashboard routes - no navbar/footer, dashboard has its own sidebar */}
           <Route path="/dashboard/provider" element={<ProviderDashboard />} />
           <Route path="/dashboard/provider/bookings/:id" element={<ProviderBookingDetails />} />
+          <Route path="/dashboard/provider/services" element={<MyServices />} />
 
           {/* Main routes - with navbar/footer */}
           <Route path="/*" element={

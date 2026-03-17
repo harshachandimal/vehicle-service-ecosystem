@@ -1,9 +1,9 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
-import { useInvoiceForm } from '../../hooks/useInvoiceForm';
-import { InvoiceModalHeader } from './invoice/InvoiceModalHeader';
-import { InvoiceLineItem } from './invoice/InvoiceLineItem';
-import { InvoiceModalFooter } from './invoice/InvoiceModalFooter';
+import { useInvoiceForm } from '../../../hooks/useInvoiceForm';
+import { InvoiceModalHeader } from './modal-elements/InvoiceModalHeader';
+import { InvoiceLineItem } from './modal-elements/InvoiceLineItem';
+import { InvoiceModalFooter } from './modal-elements/InvoiceModalFooter';
 
 interface Props {
     isOpen: boolean;

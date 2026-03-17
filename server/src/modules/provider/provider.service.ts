@@ -7,6 +7,7 @@
 import {
     UpdateProviderProfileDTO,
     CreateServiceItemDTO,
+    UpdateServiceItemDTO,
     ProviderDetailsResponse,
     ProviderFilterDTO,
     ProviderListItem,
@@ -86,11 +87,51 @@ export class ProviderService {
     /**
      * Remove service from provider's menu
      * 
+     * @param {string} userId - Provider user ID (for ownership check)
      * @param {string} serviceId - Service ID to remove
      * @returns Promise with deleted service
      */
-    async removeServiceFromMenu(serviceId: string) {
+    async removeServiceFromMenu(userId: string, serviceId: string) {
+        await this.checkServiceOwnership(userId, serviceId);
         return await this.providerRepository.removeServiceItem(serviceId);
+    }
+
+    /**
+     * Update service in provider's menu
+     * 
+     * @param {string} userId - Provider user ID (for ownership check)
+     * @param {string} serviceId - Service ID to update
+     * @param {UpdateServiceItemDTO} data - Service item data to update
+     * @returns Promise with updated service
+     */
+    async updateServiceInMenu(userId: string, serviceId: string, data: UpdateServiceItemDTO) {
+        await this.checkServiceOwnership(userId, serviceId);
+        
+        // Validate service data if provided
+        if (data.price !== undefined && data.price < 0) {
+            throw new Error('Price cannot be negative.');
+        }
+
+        return await this.providerRepository.updateServiceItem(serviceId, data);
+    }
+
+    /**
+     * Helper to verify if a service belongs to a provider
+     * 
+     * @param {string} userId - Provider user ID
+     * @param {string} serviceId - Service ID
+     * @throws {Error} if ownership not verified
+     */
+    private async checkServiceOwnership(userId: string, serviceId: string) {
+        const service = await this.providerRepository.findServiceById(serviceId);
+        
+        if (!service) {
+            throw new Error('Service not found.');
+        }
+
+        if (service.profile.userId !== userId) {
+            throw new Error('You do not have permission to modify this service.');
+        }
     }
 
     /**

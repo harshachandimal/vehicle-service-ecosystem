@@ -10,6 +10,7 @@ import { ProviderRepository } from './provider.repository';
 import {
     UpdateProviderProfileDTO,
     CreateServiceItemDTO,
+    UpdateServiceItemDTO,
     ProviderFilterDTO,
     ServiceFilterDTO,
 } from '../../types/provider.types';
@@ -119,11 +120,34 @@ export async function removeServiceHandler(
     res: Response
 ): Promise<void> {
     try {
+        const userId = req.user!.userId;
         const serviceId = req.params.id;
-        await providerService.removeServiceFromMenu(serviceId);
+        await providerService.removeServiceFromMenu(userId, serviceId);
         res.status(204).send();
     } catch (error) {
         const message = error instanceof Error ? error.message : 'Failed to remove service';
+        res.status(400).json({ error: message });
+    }
+}
+
+/**
+ * PATCH /api/providers/services/:id
+ * Update service item in catalog
+ * Protected: PROVIDER only
+ */
+export async function updateServiceHandler(
+    req: AuthenticatedRequest,
+    res: Response
+): Promise<void> {
+    try {
+        const userId = req.user!.userId;
+        const serviceId = req.params.id;
+        const data: UpdateServiceItemDTO = req.body;
+
+        const service = await providerService.updateServiceInMenu(userId, serviceId, data);
+        res.status(200).json(service);
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to update service';
         res.status(400).json({ error: message });
     }
 }

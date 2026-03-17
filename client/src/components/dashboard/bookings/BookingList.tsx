@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
-import type { BookingResponse } from '../../api/booking.api';
+import type { BookingResponse } from '../../../api/booking.api';
 import BookingCard from './BookingCard';
-import TabButton from './TabButton';
+import TabButton from '../shared/TabButton';
 import { Calendar, FilterX } from 'lucide-react';
 
 interface BookingListProps {

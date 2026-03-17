@@ -86,6 +86,17 @@ export interface CreateServiceItemDTO {
 }
 
 /**
+ * DTO for updating an existing service item
+ */
+export interface UpdateServiceItemDTO {
+    name?: string;
+    price?: number;
+    description?: string;
+    vehicleType?: string;
+    duration?: number;
+}
+
+/**
  * DTO for updating provider profile
  */
 export interface UpdateProviderProfileDTO {

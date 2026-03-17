@@ -1,9 +1,4 @@
-/**
- * Providers API module
- * Handles HTTP calls to the /api/providers endpoint
- */
-
-const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api';
+import api from './auth.api';
 
 /** Filter parameters for the provider listing */
 export interface ProviderFilters {
@@ -41,29 +36,80 @@ export interface ProviderDetail {
         registrationNumber?: string;
         photoUrl?: string;
     };
-    services: { id: string; name: string; price: number; description?: string }[];
+    services: ProviderService[];
 }
+
+export interface ProviderService {
+    id: string;
+    name: string;
+    price: number;
+    description?: string;
+    vehicleType?: string;
+    duration?: number;
+}
+
+export interface CreateServiceDTO {
+    name: string;
+    price: number;
+    description?: string;
+    vehicleType?: string;
+    duration?: number;
+}
+
+export interface UpdateServiceDTO extends Partial<CreateServiceDTO> {}
 
 /**
- * Fetch providers from the API with optional filters
+ * Providers API module
  */
-export async function getAllProviders(filters: ProviderFilters = {}): Promise<ProviderListItem[]> {
-    const params = new URLSearchParams();
-    if (filters.location) params.set('location', filters.location);
-    if (filters.search) params.set('search', filters.search);
-    if (filters.type) params.set('type', filters.type);
-    if (filters.minRating !== undefined) params.set('minRating', String(filters.minRating));
+export const providersApi = {
+    /**
+     * Fetch providers from the API with optional filters
+     */
+    getAllProviders: async (filters: ProviderFilters = {}): Promise<ProviderListItem[]> => {
+        const response = await api.get<ProviderListItem[]>('/api/providers', { params: filters });
+        return response.data;
+    },
 
-    const res = await fetch(`${API_BASE}/providers?${params.toString()}`);
-    if (!res.ok) throw new Error('Failed to fetch providers');
-    return res.json();
-}
+    /**
+     * Fetch a single provider's full detail by profile ID
+     */
+    getProviderById: async (id: string): Promise<ProviderDetail> => {
+        const response = await api.get<ProviderDetail>(`/api/providers/${id}`);
+        return response.data;
+    },
 
-/**
- * Fetch a single provider's full detail by profile ID
- */
-export async function getProviderById(id: string): Promise<ProviderDetail> {
-    const res = await fetch(`${API_BASE}/providers/${id}`);
-    if (!res.ok) throw new Error('Provider not found');
-    return res.json();
-}
+    /**
+     * Fetch the authenticated provider's own profile and services
+     */
+    getMyProfile: async (): Promise<ProviderDetail> => {
+        const response = await api.get<ProviderDetail>('/api/providers/me');
+        return response.data;
+    },
+
+    /**
+     * Add a service to the provider's catalog
+     */
+    addService: async (data: CreateServiceDTO): Promise<ProviderService> => {
+        const response = await api.post<ProviderService>('/api/providers/services', data);
+        return response.data;
+    },
+
+    /**
+     * Update an existing service item
+     */
+    updateService: async (id: string, data: UpdateServiceDTO): Promise<ProviderService> => {
+        const response = await api.patch<ProviderService>(`/api/providers/services/${id}`, data);
+        return response.data;
+    },
+
+    /**
+     * Remove a service item from the catalog
+     */
+    deleteService: async (id: string): Promise<void> => {
+        await api.delete(`/api/providers/services/${id}`);
+    },
+};
+
+// Named exports for backward compatibility
+export const getAllProviders = providersApi.getAllProviders;
+export const getProviderById = providersApi.getProviderById;

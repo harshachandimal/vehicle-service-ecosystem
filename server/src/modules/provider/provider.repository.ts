@@ -9,6 +9,7 @@ import {
     ServiceCategory,
     UpdateProviderProfileDTO,
     CreateServiceItemDTO,
+    UpdateServiceItemDTO,
     ProviderDetailsResponse,
     ProviderFilterDTO,
     ProviderListItem,
@@ -236,6 +237,31 @@ export class ProviderRepository {
     async removeServiceItem(serviceId: string) {
         return await this.prisma.providerService.delete({
             where: { id: serviceId },
+        });
+    }
+
+    /**
+     * Update service item in catalog
+     * @param {string} serviceId - Service ID to update
+     * @param {UpdateServiceItemDTO} data - Service item data to update
+     * @returns Promise with updated service
+     */
+    async updateServiceItem(serviceId: string, data: UpdateServiceItemDTO) {
+        return await this.prisma.providerService.update({
+            where: { id: serviceId },
+            data,
+        });
+    }
+
+    /**
+     * Get a service by ID with profile info
+     * @param {string} serviceId - Service ID
+     * @returns Promise with service or null
+     */
+    async findServiceById(serviceId: string) {
+        return await this.prisma.providerService.findUnique({
+            where: { id: serviceId },
+            include: { profile: true },
         });
     }
 

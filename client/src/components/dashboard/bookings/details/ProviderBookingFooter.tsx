@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Receipt } from 'lucide-react';
 import BookingActions from '../BookingActions';
-import { GenerateInvoiceModal } from '../GenerateInvoiceModal';
-import { InvoiceViewer } from '../InvoiceViewer';
-import { type BookingResponse } from '../../../api/booking.api';
+import { GenerateInvoiceModal } from '../../invoices/GenerateInvoiceModal';
+import { InvoiceViewer } from '../../invoices/InvoiceViewer';
+import { type BookingResponse } from '../../../../api/booking.api';
 
 interface Props {
     booking: BookingResponse;

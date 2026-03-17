@@ -3,8 +3,8 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { bookingApi } from '../../api/booking.api';
 import type { BookingResponse } from '../../api/booking.api';
-import BookingList from '../../components/dashboard/BookingList';
-import ProviderSidebar from '../../components/dashboard/ProviderSidebar';
+import BookingList from '../../components/dashboard/bookings/BookingList';
+import ProviderSidebar from '../../components/dashboard/layout/Sidebar';
 import { FileText, AlertCircle, RefreshCw, Search } from 'lucide-react';
 
 export default function ProviderDashboard() {
