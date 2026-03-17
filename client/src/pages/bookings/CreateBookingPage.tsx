@@ -12,7 +12,7 @@ const TIME_SLOTS = [
     '09:00 AM', '10:00 AM', '11:00 AM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM'
 ];
 
-export default function CreateBookingPage() {
+export default function CreateBookingPage({ isDashboard = false }: { isDashboard?: boolean }) {
     const { serviceId } = useParams<{ serviceId: string }>();
     const {
         isLoading,
@@ -31,7 +31,7 @@ export default function CreateBookingPage() {
         notes,
         setNotes,
         handleSubmit
-    } = useCreateBooking(serviceId);
+    } = useCreateBooking(serviceId, isDashboard);
 
     if (isLoading) {
         return (
@@ -65,7 +65,7 @@ export default function CreateBookingPage() {
             <div className="min-h-screen bg-white/70 backdrop-blur-sm absolute inset-0 -z-10" />
 
             <div className="max-w-3xl mx-auto">
-                <Link to="/services" className="inline-flex items-center gap-2 text-white hover:text-white/80 mb-6 transition-colors">
+                <Link to={isDashboard ? "/dashboard/owner/book" : "/services"} className="inline-flex items-center gap-2 text-white hover:text-white/80 mb-6 transition-colors">
                     <ArrowLeft size={18} /> Back to Services
                 </Link>
 

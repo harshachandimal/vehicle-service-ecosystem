@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Car, History, User, LogOut } from 'lucide-react';
+import { LayoutDashboard, Car, History, User, LogOut, PlusCircle } from 'lucide-react';
 import { useAuth } from '../../../../hooks/useAuth';
 
 export default function OwnerSidebar() {
@@ -16,6 +16,7 @@ export default function OwnerSidebar() {
 
     const navLinks = [
         { to: '/dashboard/owner', icon: LayoutDashboard, label: 'Dashboard' },
+        { to: '/dashboard/owner/book', icon: PlusCircle, label: 'Book a Service' },
         { to: '/dashboard/owner/vehicles', icon: Car, label: 'My Vehicles' },
         { to: '/dashboard/owner/history', icon: History, label: 'Service History' },
         { to: '/dashboard/owner/settings', icon: User, label: 'Profile Settings' },

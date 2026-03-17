@@ -8,7 +8,7 @@ export default function BookingSuccess() {
             </div>
             <h2 className="text-2xl font-bold text-dark mb-2">Booking Confirmed!</h2>
             <p className="text-gray-600 mb-6">Your service has been requested successfully.</p>
-            <p className="text-sm text-gray-500 animate-pulse">Redirecting to home...</p>
+            <p className="text-sm text-gray-500 animate-pulse">Redirecting to services...</p>
         </div>
     );
 }

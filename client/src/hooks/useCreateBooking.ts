@@ -7,7 +7,7 @@ import { vehicleApi } from '../api/vehicle.api';
 import type { Vehicle } from '../api/vehicle.api';
 import { bookingApi } from '../api/booking.api';
 
-export function useCreateBooking(serviceId: string | undefined) {
+export function useCreateBooking(serviceId: string | undefined, isDashboard: boolean = false) {
     const navigate = useNavigate();
     const { user } = useAuth();
 
@@ -92,7 +92,7 @@ export function useCreateBooking(serviceId: string | undefined) {
 
             setSuccess(true);
             setTimeout(() => {
-                navigate('/');
+                navigate(isDashboard ? '/dashboard/owner/book' : '/services');
             }, 2500);
         } catch (err: any) {
             setError(err.response?.data?.error || 'Failed to create booking.');
