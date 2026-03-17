@@ -1,45 +1,52 @@
 import { Router } from 'express';
 import { authenticate, authorize } from '../../common/middleware/auth.middleware';
+import { uploadPhoto } from '../../common/middleware/upload.middleware';
 import { UserRole } from '../../types/user.types';
 import {
     addVehicleHandler,
     getMyVehiclesHandler,
+    getVehicleDetailsHandler,
+    updateVehiclePhotoHandler,
     deleteVehicleHandler,
 } from './vehicle.controller';
 
-/**
- * Vehicle Routes
- * Defines endpoints for vehicle management
- * All routes require authentication
- */
 const vehicleRoutes = Router();
 
 // Apply authentication to all vehicle routes
 vehicleRoutes.use(authenticate);
 
 /**
- * POST /vehicles
- * Add a new vehicle (Owner only)
- * 
- * @body {CreateVehicleDTO} - make, model, year, licensePlate
- * @returns {Vehicle} - Created vehicle data
+ * @route   POST /api/vehicles
+ * @desc    Add a new vehicle
+ * @access  Protected (Owner only)
  */
 vehicleRoutes.post('/', authorize([UserRole.OWNER]), addVehicleHandler);
 
 /**
- * GET /vehicles
- * List all vehicles for the authenticated owner
- * 
- * @returns {Vehicle[]} - Array of owner's vehicles
+ * @route   GET /api/vehicles/me
+ * @desc    List owner's vehicles
+ * @access  Protected (Owner only)
  */
-vehicleRoutes.get('/', authorize([UserRole.OWNER]), getMyVehiclesHandler);
+vehicleRoutes.get('/me', authorize([UserRole.OWNER]), getMyVehiclesHandler);
 
 /**
- * DELETE /vehicles/:id
- * Delete a vehicle by ID (Owner only)
- * 
- * @param {string} id - Vehicle ID to delete
- * @returns {object} - Success message
+ * @route   GET /api/vehicles/:id
+ * @desc    Get vehicle details
+ * @access  Protected (Owner only)
+ */
+vehicleRoutes.get('/:id', authorize([UserRole.OWNER]), getVehicleDetailsHandler);
+
+/**
+ * @route   PATCH /api/vehicles/:id/photo
+ * @desc    Update vehicle photo
+ * @access  Protected (Owner only)
+ */
+vehicleRoutes.patch('/:id/photo', authorize([UserRole.OWNER]), uploadPhoto, updateVehiclePhotoHandler);
+
+/**
+ * @route   DELETE /api/vehicles/:id
+ * @desc    Delete a vehicle
+ * @access  Protected (Owner only)
  */
 vehicleRoutes.delete('/:id', authorize([UserRole.OWNER]), deleteVehicleHandler);
 

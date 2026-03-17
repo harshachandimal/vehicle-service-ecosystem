@@ -7,6 +7,7 @@ export interface Vehicle {
     model: string;
     year: number;
     licensePlate: string;
+    photoUrl?: string;
     createdAt: string;
     updatedAt: string;
 }
@@ -32,7 +33,30 @@ export const vehicleApi = {
      * Get all vehicles belonging to the authenticated owner
      */
     getMyVehicles: async (): Promise<Vehicle[]> => {
-        const response = await api.get<Vehicle[]>('/api/vehicles');
+        const response = await api.get<Vehicle[]>('/api/vehicles/me');
+        return response.data;
+    },
+
+    /**
+     * Get a single vehicle by ID
+     */
+    getVehicleById: async (id: string): Promise<Vehicle> => {
+        const response = await api.get<Vehicle>(`/api/vehicles/${id}`);
+        return response.data;
+    },
+
+    /**
+     * Update vehicle photo
+     */
+    uploadVehiclePhoto: async (id: string, file: File): Promise<Vehicle> => {
+        const formData = new FormData();
+        formData.append('photo', file);
+
+        const response = await api.patch<Vehicle>(`/api/vehicles/${id}/photo`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
         return response.data;
     },
 };

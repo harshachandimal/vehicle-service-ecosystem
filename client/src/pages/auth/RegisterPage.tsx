@@ -54,6 +54,8 @@ export default function RegisterPage() {
             const user = await register({ ...formData, role: 'OWNER' });
             if (user.role === 'PROVIDER') {
                 navigate('/dashboard/provider');
+            } else if (user.role === 'OWNER') {
+                navigate('/dashboard/owner');
             } else {
                 navigate('/');
             }

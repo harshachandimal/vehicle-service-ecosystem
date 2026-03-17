@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Save, Clock, Truck, FileText } from 'lucide-react';
-import type { ProviderService } from '../../../api/providers.api';
+import type { ProviderService } from '../../../../api/providers.api';
 
 interface ServiceModalProps {
     isOpen: boolean;

@@ -1,5 +1,5 @@
-import type { BookingResponse } from '../../../api/booking.api';
-import { useAuth } from '../../../hooks/useAuth';
+import type { BookingResponse } from '../../../../api/booking.api';
+import { useAuth } from '../../../../hooks/useAuth';
 
 interface BookingActionsProps {
     booking: BookingResponse;

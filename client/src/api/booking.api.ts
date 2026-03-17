@@ -19,13 +19,16 @@ export interface BookingResponse {
     serviceDate: string;
     status: string;
     vehicle?: {
+        id: string;
         make: string;
         model: string;
+        year: number;
         licensePlate: string;
         ownerName?: string;
         ownerPhone?: string;
     };
     service?: {
+        id: string;
         name: string;
         price: string;
     };
@@ -36,6 +39,7 @@ export interface BookingResponse {
     invoice?: {
         id: string;
         status: string;
+        amount?: string;
     };
 }
 
@@ -54,6 +58,14 @@ export const bookingApi = {
      */
     getProviderBookings: async (): Promise<BookingResponse[]> => {
         const response = await api.get<BookingResponse[]>('/api/bookings/provider');
+        return response.data;
+    },
+
+    /**
+     * Get all bookings for the authenticated owner
+     */
+    getMyBookings: async (): Promise<BookingResponse[]> => {
+        const response = await api.get<BookingResponse[]>('/api/bookings/me');
         return response.data;
     },
 

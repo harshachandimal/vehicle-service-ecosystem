@@ -53,6 +53,53 @@ export async function getMyVehiclesHandler(
 }
 
 /**
+ * Handle getting a single vehicle's details
+ * Protected: Owner only
+ */
+export async function getVehicleDetailsHandler(
+    req: AuthenticatedRequest,
+    res: Response
+): Promise<void> {
+    try {
+        const ownerId = req.user!.userId;
+        const vehicleId = req.params.id;
+        const vehicle = await vehicleService.getVehicleById(vehicleId, ownerId);
+        res.status(200).json(vehicle);
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to fetch vehicle details';
+        res.status(404).json({ error: message });
+    }
+}
+
+/**
+ * Handle updating a vehicle's photo
+ * Protected: Owner only
+ */
+export async function updateVehiclePhotoHandler(
+    req: AuthenticatedRequest,
+    res: Response
+): Promise<void> {
+    try {
+        const ownerId = req.user!.userId;
+        const vehicleId = req.params.id;
+        const file = req.file;
+
+        if (!file) {
+            res.status(400).json({ error: 'Photo file is required' });
+            return;
+        }
+
+        const photoUrl = `/uploads/${file.filename}`;
+
+        const vehicle = await vehicleService.updateVehiclePhoto(vehicleId, ownerId, photoUrl);
+        res.status(200).json(vehicle);
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to update vehicle photo';
+        res.status(400).json({ error: message });
+    }
+}
+
+/**
  * Handle deleting a vehicle
  * Protected: Owner only
  * 

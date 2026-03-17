@@ -49,20 +49,30 @@ export async function getProviderBookingsHandler(
 }
 
 /**
- * Get owner's bookings - GET /api/bookings/owner (Owner only)
+ * Get current user's bookings (Owner) - GET /api/bookings/me
  * @param {AuthenticatedRequest} req @param {Response} res
  */
-export async function getOwnerBookingsHandler(
+export async function getMyBookingsHandler(
     req: AuthenticatedRequest, res: Response
 ): Promise<void> {
     try {
-        const ownerId = req.user!.userId;
-        const bookings = await bookingService.getOwnerBookings(ownerId);
+        const userId = req.user!.userId;
+        const bookings = await bookingService.getOwnerBookings(userId);
         res.status(200).json(bookings);
     } catch (error) {
         const msg = error instanceof Error ? error.message : 'Failed to fetch bookings';
         res.status(500).json({ error: msg });
     }
+}
+
+/**
+ * Get owner's bookings - GET /api/bookings/owner (Deprecated in favor of /me)
+ * @param {AuthenticatedRequest} req @param {Response} res
+ */
+export async function getOwnerBookingsHandler(
+    req: AuthenticatedRequest, res: Response
+): Promise<void> {
+    return getMyBookingsHandler(req, res);
 }
 
 /**

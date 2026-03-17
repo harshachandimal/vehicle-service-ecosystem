@@ -7,23 +7,13 @@ import { AuthenticatedRequest } from '../../common/middleware/auth.middleware';
  * Handles HTTP requests for invoice management operations
  */
 export class InvoiceController {
-    private invoiceService: InvoiceService;
-
     /**
-     * Create a new InvoiceController instance
-     * 
      * @param {InvoiceService} invoiceService - Service for invoice business logic
      */
-    constructor(invoiceService: InvoiceService) {
-        this.invoiceService = invoiceService;
-    }
+    constructor(private invoiceService: InvoiceService) {}
 
     /**
      * Create a new invoice for a completed booking
-     * POST /api/invoices
-     * 
-     * @route POST /
-     * @access Provider only
      */
     async createInvoice(req: AuthenticatedRequest, res: Response): Promise<void> {
         try {
@@ -38,13 +28,12 @@ export class InvoiceController {
             const invoice = await this.invoiceService.createInvoice(providerId, { bookingId, items });
             res.status(201).json(invoice);
         } catch (error: any) {
-            res.status(400).json({ error: error.message });
+            this.handleError(res, error);
         }
     }
 
     /**
      * Update a draft invoice
-     * PUT /api/invoices/:id
      */
     async updateInvoice(req: AuthenticatedRequest, res: Response): Promise<void> {
         try {
@@ -60,13 +49,12 @@ export class InvoiceController {
             const invoice = await this.invoiceService.updateInvoice(providerId, id, { bookingId, items });
             res.status(200).json(invoice);
         } catch (error: any) {
-            res.status(400).json({ error: error.message });
+            this.handleError(res, error);
         }
     }
 
     /**
      * Finalize a draft invoice
-     * PATCH /api/invoices/:id/finalize
      */
     async finalizeInvoice(req: AuthenticatedRequest, res: Response): Promise<void> {
         try {
@@ -76,93 +64,57 @@ export class InvoiceController {
             const invoice = await this.invoiceService.finalizeInvoice(providerId, id);
             res.status(200).json(invoice);
         } catch (error: any) {
-            res.status(400).json({ error: error.message });
+            this.handleError(res, error);
         }
     }
 
     /**
      * Get a single invoice by ID
-     * GET /api/invoices/:id
-     * 
-     * @route GET /:id
-     * @access Owner or Provider (if related to the booking)
      */
     async getInvoiceById(req: AuthenticatedRequest, res: Response): Promise<void> {
         try {
             const { id } = req.params;
             const userId = req.user!.userId;
 
-            const invoice = await this.invoiceService.getInvoiceById(id);
-            if (!invoice) {
-                res.status(404).json({ error: 'Invoice not found' });
-                return;
-            }
-
-            // Verify access: user must be the provider or the owner
-            const isProvider = invoice.booking && userId === (invoice.booking as any).providerId;
-            const isOwner = invoice.vehicle && userId === (invoice.vehicle as any).ownerId;
-
-            if (!isProvider && !isOwner) {
-                res.status(403).json({ error: 'Access denied' });
-                return;
-            }
-
+            const invoice = await this.invoiceService.getValidatedInvoiceById(id, userId);
             res.status(200).json(invoice);
         } catch (error: any) {
-            res.status(400).json({ error: error.message });
+            this.handleError(res, error);
         }
     }
 
     /**
      * Get invoice by booking ID
-     * GET /api/invoices/booking/:bookingId
      */
     async getInvoiceByBookingId(req: AuthenticatedRequest, res: Response): Promise<void> {
         try {
             const { bookingId } = req.params;
             const userId = req.user!.userId;
 
-            const invoice = await this.invoiceService.getInvoiceByBookingId(bookingId);
-            if (!invoice) {
-                res.status(404).json({ error: 'Invoice not found' });
-                return;
-            }
-
-            const isProvider = invoice.booking && userId === (invoice.booking as any).providerId;
-            const isOwner = invoice.vehicle && userId === (invoice.vehicle as any).ownerId;
-
-            if (!isProvider && !isOwner) {
-                res.status(403).json({ error: 'Access denied' });
-                return;
-            }
-
+            const invoice = await this.invoiceService.getValidatedInvoiceByBookingId(bookingId, userId);
             res.status(200).json(invoice);
         } catch (error: any) {
-            res.status(400).json({ error: error.message });
+            this.handleError(res, error);
         }
     }
 
     /**
      * Pay an invoice
-     * PATCH /api/invoices/:id/pay
      */
     async payInvoice(req: AuthenticatedRequest, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            const invoice = await this.invoiceService.payInvoice(id);
+            const userId = req.user!.userId;
+
+            const invoice = await this.invoiceService.payInvoice(id, userId);
             res.status(200).json(invoice);
         } catch (error: any) {
-            res.status(400).json({ error: error.message });
+            this.handleError(res, error);
         }
     }
 
     /**
      * Get all invoices for the authenticated user
-     * Smart handler that returns owner's or provider's invoices based on role
-     * GET /api/invoices
-     * 
-     * @route GET /
-     * @access Owner or Provider
      */
     async getMyInvoices(req: AuthenticatedRequest, res: Response): Promise<void> {
         try {
@@ -172,7 +124,23 @@ export class InvoiceController {
             const invoices = await this.invoiceService.getInvoicesByRole(userId, role);
             res.status(200).json(invoices);
         } catch (error: any) {
-            res.status(400).json({ error: error.message });
+            this.handleError(res, error);
         }
+    }
+
+    /**
+     * Centralized error handling
+     */
+    private handleError(res: Response, error: any): void {
+        const message = error.message || 'An unexpected error occurred';
+        let status = 400;
+
+        if (message.includes('Access denied') || message.includes('authorized')) {
+            status = 403;
+        } else if (message.includes('not found')) {
+            status = 404;
+        }
+
+        res.status(status).json({ error: message });
     }
 }

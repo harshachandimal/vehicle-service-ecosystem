@@ -76,6 +76,7 @@ model Vehicle {
   model        String    // Model name
   year         Int
   licensePlate String    @unique
+  photoUrl     String?   // Optional vehicle photo URL
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   owner        User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)

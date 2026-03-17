@@ -72,6 +72,8 @@ export default function BusinessRegisterPage() {
             });
             if (user.role === 'PROVIDER') {
                 navigate('/dashboard/provider');
+            } else if (user.role === 'OWNER') {
+                navigate('/dashboard/owner');
             } else {
                 navigate('/');
             }

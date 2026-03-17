@@ -53,6 +53,37 @@ export class VehicleService {
     }
 
     /**
+     * Get a vehicle by ID for an owner
+     * 
+     * @param {string} id - The vehicle ID
+     * @param {string} ownerId - The owner's ID for authorization
+     * @returns {Promise<Vehicle>} The vehicle
+     * @throws {Error} If not found or access denied
+     */
+    async getVehicleById(id: string, ownerId: string): Promise<Vehicle> {
+        const vehicle = await this.vehicleRepository.findById(id);
+        if (!vehicle || vehicle.ownerId !== ownerId) {
+            throw new Error('Vehicle not found or access denied');
+        }
+        return vehicle;
+    }
+
+    /**
+     * Update vehicle photo
+     * 
+     * @param {string} id - The vehicle ID
+     * @param {string} ownerId - The owner's ID
+     * @param {string} photoUrl - The new photo URL
+     * @returns {Promise<Vehicle>} The updated vehicle
+     */
+    async updateVehiclePhoto(id: string, ownerId: string, photoUrl: string): Promise<Vehicle> {
+        // First check if vehicle exists and belongs to owner
+        await this.getVehicleById(id, ownerId);
+        
+        return this.vehicleRepository.update(id, { photoUrl });
+    }
+
+    /**
      * Delete a vehicle (only if owned by the user)
      * 
      * @param {string} vehicleId - The vehicle ID to delete

@@ -1,4 +1,4 @@
-import { PrismaService } from '../../common/prisma.service';
+import { PrismaClient, ServiceCategory } from '@prisma/client';
 import { UserRepository } from '../user/user.repository';
 import {
     RegisterCredentials,
@@ -6,10 +6,10 @@ import {
     LoginCredentials,
     AuthResponse,
 } from '../../types/auth.types';
+import { UserRole } from '../../types/user.types';
 import { hashPassword, comparePassword } from '../../utils/password.util';
 import { generateToken } from '../../utils/jwt.util';
 import { sendEmail } from '../../utils/mailer';
-import { ServiceCategory } from '@prisma/client';
 import crypto from 'crypto';
 
 /**
@@ -17,15 +17,14 @@ import crypto from 'crypto';
  * Handles business logic for user authentication
  */
 export class AuthService {
-    private userRepository: UserRepository;
-    private prisma = PrismaService.getInstance();
-
     /**
      * @param {UserRepository} userRepository - The user repository for data access
+     * @param {PrismaClient} prisma - The Prisma client for database operations
      */
-    constructor(userRepository: UserRepository) {
-        this.userRepository = userRepository;
-    }
+    constructor(
+        private userRepository: UserRepository,
+        private prisma: PrismaClient
+    ) {}
 
     /**
      * Register a new customer (OWNER role)
@@ -38,7 +37,7 @@ export class AuthService {
         const existingUser = await this.userRepository.findByEmail(email);
         if (existingUser) throw new Error('User with this email already exists');
 
-        if (role !== 'OWNER' && role !== 'PROVIDER') {
+        if (role !== UserRole.OWNER && role !== UserRole.PROVIDER) {
             throw new Error('Invalid role. Must be OWNER or PROVIDER');
         }
 
@@ -47,8 +46,7 @@ export class AuthService {
             email, password: hashedPassword, name, role, phone, district, city,
         });
 
-        const token = generateToken({ userId: user.id, email: user.email, role: user.role });
-        return { token, user: { id: user.id, email: user.email, name: user.name, role: user.role as any } };
+        return this.generateAuthResponse(user);
     }
 
     /**
@@ -75,7 +73,7 @@ export class AuthService {
                     email,
                     password: hashedPassword,
                     name,
-                    role: 'PROVIDER',
+                    role: UserRole.PROVIDER,
                     phone,
                     district,
                     city,
@@ -98,8 +96,7 @@ export class AuthService {
             return newUser;
         });
 
-        const token = generateToken({ userId: user.id, email: user.email, role: user.role as any });
-        return { token, user: { id: user.id, email: user.email, name: user.name, role: user.role as any } };
+        return this.generateAuthResponse(user);
     }
 
     /**
@@ -116,8 +113,30 @@ export class AuthService {
         const isValidPassword = await comparePassword(password, user.password);
         if (!isValidPassword) throw new Error('Invalid email or password');
 
-        const token = generateToken({ userId: user.id, email: user.email, role: user.role });
-        return { token, user: { id: user.id, email: user.email, name: user.name, role: user.role } };
+        return this.generateAuthResponse(user);
+    }
+
+    /**
+     * Helper to generate a standardized authentication response
+     * @param {any} user - The user object from database
+     * @returns {AuthResponse} Token and user data
+     */
+    private generateAuthResponse(user: any): AuthResponse {
+        const token = generateToken({
+            userId: user.id,
+            email: user.email,
+            role: user.role as UserRole
+        });
+
+        return {
+            token,
+            user: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                role: user.role as UserRole
+            },
+        };
     }
 
     /**
@@ -146,17 +165,27 @@ export class AuthService {
         await sendEmail(
             user.email,
             'Reset your AutoFix password',
-            `
+            this.getPasswordResetEmailTemplate(user.name, resetLink)
+        );
+
+        return genericResponse;
+    }
+
+    /**
+     * Get the HTML template for password reset email
+     */
+    private getPasswordResetEmailTemplate(userName: string, resetLink: string): string {
+        return `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                 <h2 style="color: #f97316;">Reset Your Password</h2>
-                <p>Hi ${user.name},</p>
+                <p>Hi ${userName},</p>
                 <p>We received a request to reset the password for your AutoFix account.</p>
                 <p>Click the button below to set a new password. This link is valid for <strong>1 hour</strong>.</p>
                 <div style="text-align: center; margin: 32px 0;">
                     <a href="${resetLink}"
                        style="background-color: #f97316; color: white; padding: 14px 28px;
-                              border-radius: 8px; text-decoration: none; font-weight: bold;
-                              display: inline-block;">
+                               border-radius: 8px; text-decoration: none; font-weight: bold;
+                               display: inline-block;">
                         Reset Password
                     </a>
                 </div>
@@ -167,10 +196,7 @@ export class AuthService {
                 <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
                 <p style="font-size: 12px; color: #aaa;">AutoFix Vehicle Service Ecosystem</p>
             </div>
-            `
-        );
-
-        return genericResponse;
+        `;
     }
 
     /**

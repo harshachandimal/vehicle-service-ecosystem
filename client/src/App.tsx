@@ -16,6 +16,9 @@ import ProviderDashboard from './pages/dashboard/ProviderDashboard';
 import ProviderBookingDetails from './pages/dashboard/ProviderBookingDetails';
 import MyServices from './pages/dashboard/MyServices';
 import ProfileSettings from './pages/dashboard/ProfileSettings';
+import OwnerDashboard from './pages/dashboard/OwnerDashboard';
+import MyVehicles from './pages/dashboard/MyVehicles';
+import VehicleDetails from './pages/dashboard/VehicleDetails';
 
 /**
  * Main application component with routing and authentication provider
@@ -38,6 +41,9 @@ function App() {
           <Route path="/dashboard/provider/bookings/:id" element={<ProviderBookingDetails />} />
           <Route path="/dashboard/provider/services" element={<MyServices />} />
           <Route path="/dashboard/provider/settings" element={<ProfileSettings />} />
+          <Route path="/dashboard/owner" element={<OwnerDashboard />} />
+          <Route path="/dashboard/owner/vehicles" element={<MyVehicles />} />
+          <Route path="/dashboard/owner/vehicles/:id" element={<VehicleDetails />} />
 
           {/* Main routes - with navbar/footer */}
           <Route path="/*" element={

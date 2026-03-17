@@ -5,11 +5,11 @@ import {
     Loader2
 } from 'lucide-react';
 import { useProfileSettings } from '../../hooks/useProfileSettings';
-import Sidebar from '../../components/dashboard/layout/Sidebar';
-import PhotoUploadSection from '../../components/dashboard/profile/PhotoUploadSection';
-import PersonalInfoSection from '../../components/dashboard/profile/PersonalInfoSection';
-import BusinessProfileSection from '../../components/dashboard/profile/BusinessProfileSection';
-import SecuritySection from '../../components/dashboard/profile/SecuritySection';
+import Sidebar from '../../components/dashboard/provider/layout/ProviderSidebar';
+import PhotoUploadSection from '../../components/dashboard/shared/profile/PhotoUploadSection';
+import PersonalInfoSection from '../../components/dashboard/shared/profile/PersonalInfoSection';
+import BusinessProfileSection from '../../components/dashboard/shared/profile/BusinessProfileSection';
+import SecuritySection from '../../components/dashboard/shared/profile/SecuritySection';
 
 const SERVER_URL = import.meta.env.VITE_API_URL?.replace('/api', '') ?? 'http://localhost:3000';
 

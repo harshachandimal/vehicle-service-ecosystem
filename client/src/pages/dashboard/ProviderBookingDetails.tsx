@@ -1,14 +1,14 @@
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useProviderBooking } from '../../hooks/useProviderBooking';
-import StatusBadge from '../../components/dashboard/shared/StatusBadge';
-import { ProviderBookingHeader } from '../../components/dashboard/bookings/details/ProviderBookingHeader';
-import { ProviderCustomerInfo } from '../../components/dashboard/bookings/details/ProviderCustomerInfo';
-import { ProviderVehicleInfo } from '../../components/dashboard/bookings/details/ProviderVehicleInfo';
-import { ProviderBookingNotes } from '../../components/dashboard/bookings/details/ProviderBookingNotes';
-import { ProviderBookingLoading } from '../../components/dashboard/bookings/details/ProviderBookingLoading';
-import { ProviderBookingError } from '../../components/dashboard/bookings/details/ProviderBookingError';
-import { ProviderBookingFooter } from '../../components/dashboard/bookings/details/ProviderBookingFooter';
+import StatusBadge from '../../components/dashboard/shared/common/StatusBadge';
+import { ProviderBookingHeader } from '../../components/dashboard/provider/bookings/details/ProviderBookingHeader';
+import { ProviderCustomerInfo } from '../../components/dashboard/provider/bookings/details/ProviderCustomerInfo';
+import { ProviderVehicleInfo } from '../../components/dashboard/provider/bookings/details/ProviderVehicleInfo';
+import { ProviderBookingNotes } from '../../components/dashboard/provider/bookings/details/ProviderBookingNotes';
+import { ProviderBookingLoading } from '../../components/dashboard/provider/bookings/details/ProviderBookingLoading';
+import { ProviderBookingError } from '../../components/dashboard/provider/bookings/ProviderBookingError';
+import { ProviderBookingFooter } from '../../components/dashboard/provider/bookings/details/ProviderBookingFooter';
 import { ArrowLeft } from 'lucide-react';
 import { isServiceTimePassed } from '../../utils/date.util';
 

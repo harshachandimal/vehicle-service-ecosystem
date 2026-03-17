@@ -1,5 +1,5 @@
 import { Edit2, Trash2, Clock, Truck } from 'lucide-react';
-import type { ProviderService } from '../../../api/providers.api';
+import type { ProviderService } from '../../../../api/providers.api';
 
 interface ServiceRowProps {
     service: ProviderService;

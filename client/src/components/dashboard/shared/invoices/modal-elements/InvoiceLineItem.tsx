@@ -1,6 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
-import { type InvoiceItem } from '../../../../api/invoice.api';
+import { type InvoiceItem } from '../../../../../api/invoice.api';
 
 interface Props {
     item: InvoiceItem;

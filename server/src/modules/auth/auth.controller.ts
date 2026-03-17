@@ -2,10 +2,11 @@ import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { UserRepository } from '../user/user.repository';
 import { RegisterCredentials, BusinessRegisterCredentials, LoginCredentials } from '../../types/auth.types';
+import { PrismaService } from '../../common/prisma.service';
 
 /** Instantiate dependencies following DIP */
 const userRepository = new UserRepository();
-const authService = new AuthService(userRepository);
+const authService = new AuthService(userRepository, PrismaService.getInstance());
 
 /**
  * Handle customer registration (creates User only)

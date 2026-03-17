@@ -4,6 +4,7 @@ import { UserRole } from '../../types/user.types';
 import {
     createBookingHandler,
     getProviderBookingsHandler,
+    getMyBookingsHandler,
     getOwnerBookingsHandler,
     updateStatusHandler,
 } from './booking.controller';
@@ -38,6 +39,12 @@ bookingRoutes.post('/', authorize([UserRole.OWNER]), createBookingHandler);
  * @returns {BookingWithDetails[]} Array of bookings with vehicle and owner details
  */
 bookingRoutes.get('/provider', authorize([UserRole.PROVIDER]), getProviderBookingsHandler);
+
+/**
+ * GET /api/bookings/me
+ * Retrieve all bookings for the authenticated owner
+ */
+bookingRoutes.get('/me', authorize([UserRole.OWNER]), getMyBookingsHandler);
 
 /**
  * GET /api/bookings/owner

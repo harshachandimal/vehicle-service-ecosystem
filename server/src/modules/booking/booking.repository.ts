@@ -44,8 +44,13 @@ export class BookingRepository {
     async findByOwner(ownerId: string): Promise<BookingWithDetails[]> {
         const bookings = await this.prisma.booking.findMany({
             where: { vehicle: { ownerId } },
-            include: { vehicle: { include: { owner: true } }, provider: true, service: true, invoice: true },
-            orderBy: { createdAt: 'desc' },
+            include: { 
+                vehicle: true, 
+                provider: true, 
+                service: true, 
+                invoice: true 
+            },
+            orderBy: { serviceDate: 'desc' },
         });
         return bookings.map(b => this.mapToBookingWithDetails(b));
     }
@@ -72,12 +77,17 @@ export class BookingRepository {
         return {
             ...this.mapToBooking(b),
             vehicle: b.vehicle ? {
-                make: b.vehicle.make, model: b.vehicle.model,
-                licensePlate: b.vehicle.licensePlate, ownerName: b.vehicle.owner?.name,
+                id: b.vehicle.id,
+                make: b.vehicle.make, 
+                model: b.vehicle.model,
+                year: b.vehicle.year,
+                licensePlate: b.vehicle.licensePlate, 
+                ownerName: b.vehicle.owner?.name,
                 ownerPhone: b.vehicle.owner?.phone,
             } : undefined,
             provider: b.provider ? { name: b.provider.name, email: b.provider.email } : undefined,
-            invoice: b.invoice ? { id: b.invoice.id, status: b.invoice.status } : undefined,
+            service: b.service ? { id: b.service.id, name: b.service.name, price: b.service.price } : undefined,
+            invoice: b.invoice ? { id: b.invoice.id, status: b.invoice.status, amount: b.invoice.amount } : undefined,
         };
     }
 }

@@ -44,6 +44,35 @@ export class VehicleRepository {
     }
 
     /**
+     * Find a vehicle by ID
+     * 
+     * @param {string} id - The vehicle ID
+     * @returns {Promise<Vehicle | null>} The vehicle or null if not found
+     */
+    async findById(id: string): Promise<Vehicle | null> {
+        const vehicle = await this.prisma.vehicle.findUnique({
+            where: { id },
+        });
+        if (!vehicle) return null;
+        return this.mapToVehicle(vehicle);
+    }
+
+    /**
+     * Update a vehicle's information
+     * 
+     * @param {string} id - The vehicle ID
+     * @param {UpdateVehicleDTO} data - The data to update
+     * @returns {Promise<Vehicle>} The updated vehicle
+     */
+    async update(id: string, data: any): Promise<Vehicle> {
+        const vehicle = await this.prisma.vehicle.update({
+            where: { id },
+            data,
+        });
+        return this.mapToVehicle(vehicle);
+    }
+
+    /**
      * Delete a vehicle by ID (only if owned by the specified user)
      * 
      * @param {string} id - The vehicle ID to delete
@@ -68,6 +97,7 @@ export class VehicleRepository {
             model: prismaVehicle.model,
             year: prismaVehicle.year,
             licensePlate: prismaVehicle.licensePlate,
+            photoUrl: prismaVehicle.photoUrl,
             createdAt: prismaVehicle.createdAt,
             updatedAt: prismaVehicle.updatedAt,
         };

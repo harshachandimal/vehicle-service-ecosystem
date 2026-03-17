@@ -19,6 +19,8 @@ export interface Vehicle {
     createdAt: Date;
     /** Timestamp when the vehicle was last updated */
     updatedAt: Date;
+    /** Optional URL to the vehicle's photo */
+    photoUrl?: string | null;
 }
 
 /**
@@ -49,6 +51,8 @@ export interface UpdateVehicleDTO {
     year?: number;
     /** Updated license plate number */
     licensePlate?: string;
+    /** Updated photo URL */
+    photoUrl?: string | null;
 }
 
 /**

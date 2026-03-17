@@ -76,8 +76,10 @@ export interface UpdateStatusDTO {
 export interface BookingWithDetails extends Booking {
     /** Vehicle information */
     vehicle?: {
+        id: string;
         make: string;
         model: string;
+        year: number;
         licensePlate: string;
         ownerName?: string;
         ownerPhone?: string;
@@ -87,8 +89,16 @@ export interface BookingWithDetails extends Booking {
         name: string;
         email: string;
     };
+    /** Service information */
+    service?: {
+        id: string;
+        name: string;
+        price: any;
+    };
+    /** Invoice information */
     invoice?: {
         id: string;
         status: string;
+        amount: any;
     };
 }

@@ -6,15 +6,13 @@ import { BookingStatus } from '../../types/booking.types';
 /**
  * Invoice Service
  * Handles business logic for invoice management
- * Enforces strict business rules for invoice creation
+ * Enforces strict business rules for invoice creation and access
  */
 export class InvoiceService {
     private invoiceRepository: InvoiceRepository;
     private bookingRepository: BookingRepository;
 
     /**
-     * Create a new InvoiceService instance
-     * 
      * @param {InvoiceRepository} invoiceRepository - Repository for invoice data access
      * @param {BookingRepository} bookingRepository - Repository for booking data access
      */
@@ -25,40 +23,23 @@ export class InvoiceService {
 
     /**
      * Create a new invoice for a completed booking
-     * Validates booking status, provider ownership, and prevents double billing
-     * 
-     * @param {string} providerId - The authenticated provider's user ID
-     * @param {CreateInvoiceDTO} data - Invoice data including booking ID and items
-     * @returns {Promise<Invoice>} The created invoice
-     * @throws {Error} If booking not found, not completed, access denied, or already invoiced
      */
     async createInvoice(providerId: string, data: CreateInvoiceDTO): Promise<Invoice> {
-        // Fetch the booking with details
         const booking = await this.bookingRepository.findById(data.bookingId);
-        if (!booking) {
-            throw new Error('Booking not found');
-        }
+        if (!booking) throw new Error('Booking not found');
 
-        // CRITICAL VALIDATION #1: Verify booking status is COMPLETED
         if (booking.status !== BookingStatus.COMPLETED) {
             throw new Error('Invoice can only be created for completed bookings');
         }
 
-        // CRITICAL VALIDATION #2: Verify provider ownership
         if (booking.providerId !== providerId) {
             throw new Error('Access denied. Not your booking');
         }
 
-        // CRITICAL VALIDATION #3: Check for existing invoice (prevent double billing)
         const existingInvoice = await this.invoiceRepository.findByBookingId(data.bookingId);
-        if (existingInvoice) {
-            throw new Error('Invoice already exists for this booking');
-        }
+        if (existingInvoice) throw new Error('Invoice already exists for this booking');
 
-        // Calculate total amount from items
         const amount = data.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-        // Create the invoice
         return this.invoiceRepository.create({ ...data, amount });
     }
 
@@ -66,12 +47,10 @@ export class InvoiceService {
      * Update an existing invoice
      */
     async updateInvoice(providerId: string, id: string, data: CreateInvoiceDTO): Promise<Invoice> {
-        const invoice = await this.invoiceRepository.findById(id);
+        const invoice = await this.getInvoiceById(id);
         if (!invoice) throw new Error('Invoice not found');
 
-        if (invoice.booking?.providerId !== providerId) {
-            throw new Error('Access denied. Not your invoice');
-        }
+        this.verifyInvoiceAccess(invoice, providerId, true);
 
         if (invoice.status !== InvoiceStatus.DRAFT) {
             throw new Error('Cannot edit a finalized invoice');
@@ -85,12 +64,10 @@ export class InvoiceService {
      * Finalize an invoice to prevent further editing
      */
     async finalizeInvoice(providerId: string, id: string): Promise<Invoice> {
-        const invoice = await this.invoiceRepository.findById(id);
+        const invoice = await this.getInvoiceById(id);
         if (!invoice) throw new Error('Invoice not found');
 
-        if (invoice.booking?.providerId !== providerId) {
-            throw new Error('Access denied. Not your invoice');
-        }
+        this.verifyInvoiceAccess(invoice, providerId, true);
 
         if (invoice.status !== InvoiceStatus.DRAFT) {
             throw new Error('Invoice is already finalized or paid');
@@ -101,11 +78,6 @@ export class InvoiceService {
 
     /**
      * Get invoices by user role
-     * Smart dispatcher that calls appropriate repository method based on role
-     * 
-     * @param {string} userId - The user's ID
-     * @param {string} role - The user's role (OWNER or PROVIDER)
-     * @returns {Promise<InvoiceWithDetails[]>} Array of invoices
      */
     async getInvoicesByRole(userId: string, role: string): Promise<InvoiceWithDetails[]> {
         if (role === 'OWNER') {
@@ -117,22 +89,69 @@ export class InvoiceService {
     }
 
     /**
-     * Get a single invoice by ID
-     * 
-     * @param {string} id - The invoice ID
-     * @returns {Promise<InvoiceWithDetails|null>} Invoice with details or null
+     * Get a single invoice by ID with access verification
+     */
+    async getValidatedInvoiceById(id: string, userId: string): Promise<InvoiceWithDetails> {
+        const invoice = await this.invoiceRepository.findById(id);
+        if (!invoice) throw new Error('Invoice not found');
+
+        this.verifyInvoiceAccess(invoice, userId);
+        return invoice;
+    }
+
+    /**
+     * Get a single invoice by ID without verification (internal use)
      */
     async getInvoiceById(id: string): Promise<InvoiceWithDetails | null> {
         return this.invoiceRepository.findById(id);
     }
 
-    /** Get invoice by booking ID */
+    /**
+     * Get invoice by booking ID with access verification
+     */
+    async getValidatedInvoiceByBookingId(bookingId: string, userId: string): Promise<InvoiceWithDetails> {
+        const invoice = await this.invoiceRepository.findByBookingId(bookingId);
+        if (!invoice) throw new Error('Invoice not found');
+
+        this.verifyInvoiceAccess(invoice, userId);
+        return invoice;
+    }
+
+    /** Get invoice by booking ID without verification (internal use) */
     async getInvoiceByBookingId(bookingId: string): Promise<InvoiceWithDetails | null> {
         return this.invoiceRepository.findByBookingId(bookingId);
     }
 
     /** Pay an invoice */
-    async payInvoice(id: string): Promise<Invoice> {
+    async payInvoice(id: string, userId: string): Promise<Invoice> {
+        const invoice = await this.getInvoiceById(id);
+        if (!invoice) throw new Error('Invoice not found');
+
+        // Verify that the person paying is the owner
+        const isOwner = invoice.vehicle && userId === (invoice.vehicle as any).ownerId;
+        if (!isOwner) throw new Error('Access denied. Only the vehicle owner can pay this invoice');
+
         return this.invoiceRepository.updateStatus(id, 'PAID' as any);
+    }
+
+    /**
+     * Centralized access verification logic
+     * @param invoice - The invoice to check
+     * @param userId - The user ID to verify
+     * @param providerOnly - If true, only the provider has access
+     * @throws {Error} If access is denied
+     */
+    private verifyInvoiceAccess(invoice: InvoiceWithDetails, userId: string, providerOnly: boolean = false): void {
+        const isProvider = invoice.booking && userId === (invoice.booking as any).providerId;
+        const isOwner = invoice.vehicle && userId === (invoice.vehicle as any).ownerId;
+
+        if (providerOnly) {
+            if (!isProvider) throw new Error('Access denied. Only the provider can perform this action');
+            return;
+        }
+
+        if (!isProvider && !isOwner) {
+            throw new Error('Access denied. You are not authorized to view this invoice');
+        }
     }
 }

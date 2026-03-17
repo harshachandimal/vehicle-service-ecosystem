@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Wrench, User, LogOut } from 'lucide-react';
-import { useAuth } from '../../../hooks/useAuth';
+import { useAuth } from '../../../../hooks/useAuth';
 
 export default function ProviderSidebar() {
     const { logout } = useAuth();
