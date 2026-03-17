@@ -1,10 +1,10 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import { bookingApi } from '../../api/booking.api';
-import type { BookingResponse } from '../../api/booking.api';
-import BookingList from '../../components/dashboard/provider/bookings/BookingList';
-import ProviderSidebar from '../../components/dashboard/provider/layout/ProviderSidebar';
+import { useAuth } from '../../../hooks/useAuth';
+import { bookingApi } from '../../../api/booking.api';
+import type { BookingResponse } from '../../../api/booking.api';
+import BookingList from '../../../components/dashboard/provider/bookings/BookingList';
+import ProviderSidebar from '../../../components/dashboard/provider/layout/ProviderSidebar';
 import { FileText, AlertCircle, RefreshCw, Search } from 'lucide-react';
 
 export default function ProviderDashboard() {

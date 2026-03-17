@@ -12,13 +12,13 @@ import RegisterPage from './pages/auth/RegisterPage';
 import BusinessRegisterPage from './pages/auth/BusinessRegisterPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage'; import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 import CreateBookingPage from './pages/bookings/CreateBookingPage';
-import ProviderDashboard from './pages/dashboard/ProviderDashboard';
-import ProviderBookingDetails from './pages/dashboard/ProviderBookingDetails';
-import MyServices from './pages/dashboard/MyServices';
-import ProfileSettings from './pages/dashboard/ProfileSettings';
-import OwnerDashboard from './pages/dashboard/OwnerDashboard';
-import MyVehicles from './pages/dashboard/MyVehicles';
-import VehicleDetails from './pages/dashboard/VehicleDetails';
+import ProviderDashboard from './pages/dashboard/provider/ProviderDashboard';
+import ProviderBookingDetails from './pages/dashboard/provider/ProviderBookingDetails';
+import MyServices from './pages/dashboard/provider/MyServices';
+import ProfileSettings from './pages/dashboard/provider/ProfileSettings';
+import OwnerDashboard from './pages/dashboard/owner/OwnerDashboard';
+import MyVehicles from './pages/dashboard/owner/MyVehicles';
+import VehicleDetails from './pages/dashboard/owner/VehicleDetails';
 
 /**
  * Main application component with routing and authentication provider

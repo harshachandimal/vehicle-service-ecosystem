@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import OwnerSidebar from '../../components/dashboard/owner/layout/OwnerSidebar';
-import GarageSection from '../../components/dashboard/owner/GarageSection';
-import ServiceHistorySection from '../../components/dashboard/owner/ServiceHistorySection';
-import { InvoiceViewer } from '../../components/dashboard/shared/invoices/InvoiceViewer';
-import { useOwnerDashboard } from '../../hooks/useOwnerDashboard';
+import OwnerSidebar from '../../../components/dashboard/owner/layout/OwnerSidebar';
+import GarageSection from '../../../components/dashboard/owner/GarageSection';
+import ServiceHistorySection from '../../../components/dashboard/owner/ServiceHistorySection';
+import { InvoiceViewer } from '../../../components/dashboard/shared/invoices/InvoiceViewer';
+import { useOwnerDashboard } from '../../../hooks/useOwnerDashboard';
 
 const OwnerDashboard: React.FC = () => {
   const { vehicles, bookings, loading, error } = useOwnerDashboard();

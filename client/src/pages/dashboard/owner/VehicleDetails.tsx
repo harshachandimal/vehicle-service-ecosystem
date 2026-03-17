@@ -1,10 +1,10 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
-import OwnerSidebar from '../../components/dashboard/owner/layout/OwnerSidebar';
-import VehiclePhotosSection from '../../components/dashboard/owner/vehicles/VehiclePhotosSection';
-import VehicleSpecsSection from '../../components/dashboard/owner/vehicles/VehicleSpecsSection';
-import { useVehicleDetails } from '../../hooks/useVehicleDetails';
+import OwnerSidebar from '../../../components/dashboard/owner/layout/OwnerSidebar';
+import VehiclePhotosSection from '../../../components/dashboard/owner/vehicles/VehiclePhotosSection';
+import VehicleSpecsSection from '../../../components/dashboard/owner/vehicles/VehicleSpecsSection';
+import { useVehicleDetails } from '../../../hooks/useVehicleDetails';
 
 const VehicleDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();

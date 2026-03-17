@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Plus, Car, Loader2, AlertCircle } from 'lucide-react';
-import OwnerSidebar from '../../components/dashboard/owner/layout/OwnerSidebar';
-import VehicleCard from '../../components/dashboard/owner/vehicles/VehicleCard';
-import AddVehicleForm from '../../components/vehicles/AddVehicleForm';
-import { vehicleApi } from '../../api/vehicle.api';
-import type { Vehicle } from '../../api/vehicle.api';
+import OwnerSidebar from '../../../components/dashboard/owner/layout/OwnerSidebar';
+import VehicleCard from '../../../components/dashboard/owner/vehicles/VehicleCard';
+import AddVehicleForm from '../../../components/vehicles/AddVehicleForm';
+import { vehicleApi } from '../../../api/vehicle.api';
+import type { Vehicle } from '../../../api/vehicle.api';
 
 const MyVehicles: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);

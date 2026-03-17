@@ -1,11 +1,11 @@
 import { Navigate } from 'react-router-dom';
 import { Plus, Search, ShieldCheck } from 'lucide-react';
-import ProviderSidebar from '../../components/dashboard/provider/layout/ProviderSidebar';
-import ServiceModal from '../../components/dashboard/provider/services/ServiceModal';
-import DeleteServiceConfirmModal from '../../components/dashboard/provider/services/DeleteServiceConfirmModal';
-import ServiceRow from '../../components/dashboard/provider/services/ServiceRow';
-import { useMyServices } from '../../hooks/useMyServices';
-import { useAuth } from '../../hooks/useAuth';
+import ProviderSidebar from '../../../components/dashboard/provider/layout/ProviderSidebar';
+import ServiceModal from '../../../components/dashboard/provider/services/ServiceModal';
+import DeleteServiceConfirmModal from '../../../components/dashboard/provider/services/DeleteServiceConfirmModal';
+import ServiceRow from '../../../components/dashboard/provider/services/ServiceRow';
+import { useMyServices } from '../../../hooks/useMyServices';
+import { useAuth } from '../../../hooks/useAuth';
 
 export default function MyServices() {
     const { token, loading: authLoading, user } = useAuth();

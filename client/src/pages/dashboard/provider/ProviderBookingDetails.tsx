@@ -1,16 +1,16 @@
 import { useParams, Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import { useProviderBooking } from '../../hooks/useProviderBooking';
-import StatusBadge from '../../components/dashboard/shared/common/StatusBadge';
-import { ProviderBookingHeader } from '../../components/dashboard/provider/bookings/details/ProviderBookingHeader';
-import { ProviderCustomerInfo } from '../../components/dashboard/provider/bookings/details/ProviderCustomerInfo';
-import { ProviderVehicleInfo } from '../../components/dashboard/provider/bookings/details/ProviderVehicleInfo';
-import { ProviderBookingNotes } from '../../components/dashboard/provider/bookings/details/ProviderBookingNotes';
-import { ProviderBookingLoading } from '../../components/dashboard/provider/bookings/details/ProviderBookingLoading';
-import { ProviderBookingError } from '../../components/dashboard/provider/bookings/ProviderBookingError';
-import { ProviderBookingFooter } from '../../components/dashboard/provider/bookings/details/ProviderBookingFooter';
+import { useAuth } from '../../../hooks/useAuth';
+import { useProviderBooking } from '../../../hooks/useProviderBooking';
+import StatusBadge from '../../../components/dashboard/shared/common/StatusBadge';
+import { ProviderBookingHeader } from '../../../components/dashboard/provider/bookings/details/ProviderBookingHeader';
+import { ProviderCustomerInfo } from '../../../components/dashboard/provider/bookings/details/ProviderCustomerInfo';
+import { ProviderVehicleInfo } from '../../../components/dashboard/provider/bookings/details/ProviderVehicleInfo';
+import { ProviderBookingNotes } from '../../../components/dashboard/provider/bookings/details/ProviderBookingNotes';
+import { ProviderBookingLoading } from '../../../components/dashboard/provider/bookings/details/ProviderBookingLoading';
+import { ProviderBookingError } from '../../../components/dashboard/provider/bookings/ProviderBookingError';
+import { ProviderBookingFooter } from '../../../components/dashboard/provider/bookings/details/ProviderBookingFooter';
 import { ArrowLeft } from 'lucide-react';
-import { isServiceTimePassed } from '../../utils/date.util';
+import { isServiceTimePassed } from '../../../utils/date.util';
 
 export default function ProviderBookingDetails() {
     const { id } = useParams<{ id: string }>();
