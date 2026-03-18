@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import { bookingApi } from '../../../api/booking.api';
+import { socketClient } from '../../../utils/socket';
 import type { BookingResponse } from '../../../api/booking.api';
 import BookingList from '../../../components/dashboard/provider/bookings/BookingList';
 import ProviderSidebar from '../../../components/dashboard/provider/layout/ProviderSidebar';
@@ -28,10 +29,26 @@ export default function ProviderDashboard() {
     };
 
     useEffect(() => {
-        if (token && user?.role === 'PROVIDER') {
+        if (token && user?.role === 'PROVIDER' && user?.id) {
             fetchBookings();
+
+            socketClient.connect();
+            socketClient.join(user.id);
+
+            const handleUpdate = () => {
+                console.log('🔄 Provider dashboard update received via socket');
+                fetchBookings();
+            };
+
+            socketClient.on('booking_updated', handleUpdate);
+            socketClient.on('invoice_updated', handleUpdate);
+
+            return () => {
+                socketClient.off('booking_updated', handleUpdate);
+                socketClient.off('invoice_updated', handleUpdate);
+            };
         }
-    }, [token, user?.role]);
+    }, [token, user?.role, user?.id]);
 
     const handleStatusUpdate = async (id: string, status: string) => {
         try {

@@ -56,9 +56,22 @@ const BookingRow: React.FC<BookingRowProps> = ({ booking, onViewInvoice, onViewD
                 </div>
             </td>
             <td className="py-4 px-6">
-                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${colorClass}`}>
-                    {booking.status}
-                </span>
+                <div className="flex flex-col gap-1.5">
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border w-fit ${colorClass}`}>
+                        {booking.status}
+                    </span>
+                    {booking.status === 'COMPLETED' && (
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border w-fit ${
+                            booking.invoice?.status === 'PAID' 
+                                ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
+                                : booking.invoice?.status === 'PAYMENT_PENDING'
+                                ? 'bg-amber-500/10 text-amber-500 border-amber-500/20 animate-pulse'
+                                : 'bg-slate-500/10 text-slate-400 border-slate-500/20'
+                        }`}>
+                            {booking.invoice?.status === 'PAID' ? 'Paid' : booking.invoice?.status === 'PAYMENT_PENDING' ? 'Pending' : 'Unpaid'}
+                        </span>
+                    )}
+                </div>
             </td>
             <td className="py-4 px-6 text-right">
                 {booking.status === 'COMPLETED' ? (

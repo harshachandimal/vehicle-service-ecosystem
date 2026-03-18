@@ -92,9 +92,9 @@ export default function ServiceCard({ service }: Props) {
                     <button
                         onClick={() => {
                             if (!user) {
-                                navigate('/login', { state: { returnTo: `/dashboard/owner/book/${service.id}`, message: 'Please log in to book a service.' } });
+                                navigate('/login', { state: { returnTo: `/book/${service.id}`, message: 'Please log in to book a service.' } });
                             } else {
-                                navigate(`/dashboard/owner/book/${service.id}`);
+                                navigate(`/book/${service.id}`);
                             }
                         }}
                         className="px-5 py-2 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/30"

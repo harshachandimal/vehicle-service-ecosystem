@@ -15,7 +15,7 @@ export interface Invoice {
     id: string;
     bookingId: string;
     amount: number;
-    status: 'DRAFT' | 'UNPAID' | 'PAID';
+    status: 'DRAFT' | 'UNPAID' | 'PAYMENT_PENDING' | 'PAID';
     items: InvoiceItem[];
     createdAt: string;
     updatedAt: string;
@@ -62,6 +62,14 @@ export const invoiceApi = {
      */
     payInvoice: async (id: string): Promise<Invoice> => {
         const response = await api.patch<Invoice>(`/api/invoices/${id}/pay`);
+        return response.data;
+    },
+
+    /**
+     * Confirm a payment has been received (Provider ONLY)
+     */
+    confirmPayment: async (id: string): Promise<Invoice> => {
+        const response = await api.patch<Invoice>(`/api/invoices/${id}/confirm`);
         return response.data;
     },
 };

@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { bookingApi, type BookingResponse } from '../api/booking.api';
+import { socketClient } from '../utils/socket';
+import { useAuth } from './useAuth';
 
 export function useProviderBooking(id?: string) {
+    const { user } = useAuth();
     const [booking, setBooking] = useState<BookingResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -36,7 +39,27 @@ export function useProviderBooking(id?: string) {
 
     useEffect(() => {
         fetchBookingDetails();
-    }, [id]);
+
+        if (user?.id && id) {
+            socketClient.connect();
+            socketClient.join(user.id);
+
+            const handleUpdate = (data: any) => {
+                if (data.bookingId === id) {
+                    console.log('🔄 Provider booking update received via socket');
+                    fetchBookingDetails();
+                }
+            };
+
+            socketClient.on('booking_updated', handleUpdate);
+            socketClient.on('invoice_updated', handleUpdate);
+
+            return () => {
+                socketClient.off('booking_updated', handleUpdate);
+                socketClient.off('invoice_updated', handleUpdate);
+            };
+        }
+    }, [id, user?.id]);
 
     return { booking, loading, error, handleStatusUpdate, refetch: fetchBookingDetails };
 }

@@ -2,6 +2,7 @@ import { BookingRepository } from './booking.repository';
 import { Booking, BookingStatus, CreateBookingDTO, BookingWithDetails } from '../../types/booking.types';
 import { validateStatusTransition } from '../../utils/booking-status.util';
 import { PrismaService } from '../../common/prisma.service';
+import { SocketService } from '../../common/socket.service';
 
 /**
  * Booking Service
@@ -45,6 +46,10 @@ export class BookingService {
             throw new Error('Invalid provider or user is not a provider');
         }
         const booking = await this.bookingRepository.create(data);
+
+        // Notify via Sockets
+        SocketService.emit('booking_updated', { bookingId: booking.id, type: 'NEW_BOOKING' }, ownerId);
+        SocketService.emit('booking_updated', { bookingId: booking.id, type: 'NEW_BOOKING' }, data.providerId);
 
         // Notify the provider about the new booking request
         try {
@@ -106,8 +111,9 @@ export class BookingService {
         const updated = await this.bookingRepository.updateStatus(bookingId, newStatus);
 
         // Notify the vehicle owner about the status change
+        let rawBooking = null;
         try {
-            const rawBooking = await this.prisma.booking.findUnique({
+            rawBooking = await this.prisma.booking.findUnique({
                 where: { id: bookingId },
                 include: { vehicle: true },
             });
@@ -132,6 +138,12 @@ export class BookingService {
         } catch (notificationError) {
             // Non-critical: log but don't fail the status update
             console.error('Failed to create owner notification:', notificationError);
+        }
+
+        // Notify via Sockets
+        if (rawBooking) {
+            SocketService.emit('booking_updated', { bookingId, status: newStatus }, rawBooking.vehicle.ownerId);
+            SocketService.emit('booking_updated', { bookingId, status: newStatus }, providerId);
         }
 
         return updated;

@@ -2,6 +2,8 @@ import { InvoiceRepository } from './invoice.repository';
 import { BookingRepository } from '../booking/booking.repository';
 import { Invoice, CreateInvoiceDTO, InvoiceWithDetails, InvoiceStatus } from '../../types/invoice.types';
 import { BookingStatus } from '../../types/booking.types';
+import { PrismaService } from '../../common/prisma.service';
+import { SocketService } from '../../common/socket.service';
 
 /**
  * Invoice Service
@@ -11,6 +13,7 @@ import { BookingStatus } from '../../types/booking.types';
 export class InvoiceService {
     private invoiceRepository: InvoiceRepository;
     private bookingRepository: BookingRepository;
+    private prisma = PrismaService.getInstance();
 
     /**
      * @param {InvoiceRepository} invoiceRepository - Repository for invoice data access
@@ -40,7 +43,19 @@ export class InvoiceService {
         if (existingInvoice) throw new Error('Invoice already exists for this booking');
 
         const amount = data.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        return this.invoiceRepository.create({ ...data, amount });
+        const invoice = await this.invoiceRepository.create({ ...data, amount });
+
+        // Notify via Sockets
+        const bookingData = await this.bookingRepository.findById(data.bookingId);
+        if (bookingData) {
+            const vehicle = await this.prisma.vehicle.findUnique({ where: { id: bookingData.vehicleId } });
+            if (vehicle) {
+                SocketService.emit('invoice_updated', { invoiceId: invoice.id, bookingId: data.bookingId }, vehicle.ownerId);
+            }
+            SocketService.emit('invoice_updated', { invoiceId: invoice.id, bookingId: data.bookingId }, providerId);
+        }
+
+        return invoice;
     }
 
     /**
@@ -57,7 +72,17 @@ export class InvoiceService {
         }
 
         const amount = data.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        return this.invoiceRepository.updateItems(id, data.items, amount);
+        const updated = await this.invoiceRepository.updateItems(id, data.items, amount);
+
+        // Notify via Sockets
+        const booking = await this.bookingRepository.findById(invoice.bookingId);
+        if (booking) {
+            const vehicle = await this.prisma.vehicle.findUnique({ where: { id: booking.vehicleId } });
+            if (vehicle) SocketService.emit('invoice_updated', { invoiceId: id, bookingId: invoice.bookingId }, vehicle.ownerId);
+            SocketService.emit('invoice_updated', { invoiceId: id, bookingId: invoice.bookingId }, providerId);
+        }
+
+        return updated;
     }
 
     /**
@@ -73,7 +98,17 @@ export class InvoiceService {
             throw new Error('Invoice is already finalized or paid');
         }
 
-        return this.invoiceRepository.updateStatus(id, 'UNPAID' as any);
+        const updated = await this.invoiceRepository.updateStatus(id, 'UNPAID' as any);
+
+        // Notify via Sockets
+        const booking = await this.bookingRepository.findById(invoice.bookingId);
+        if (booking) {
+            const vehicle = await this.prisma.vehicle.findUnique({ where: { id: booking.vehicleId } });
+            if (vehicle) SocketService.emit('invoice_updated', { invoiceId: id, bookingId: invoice.bookingId }, vehicle.ownerId);
+            SocketService.emit('invoice_updated', { invoiceId: id, bookingId: invoice.bookingId }, providerId);
+        }
+
+        return updated;
     }
 
     /**
@@ -122,7 +157,7 @@ export class InvoiceService {
         return this.invoiceRepository.findByBookingId(bookingId);
     }
 
-    /** Pay an invoice */
+    /** Pay an invoice - sets to PAYMENT_PENDING and notifies provider */
     async payInvoice(id: string, userId: string): Promise<Invoice> {
         const invoice = await this.getInvoiceById(id);
         if (!invoice) throw new Error('Invoice not found');
@@ -131,7 +166,56 @@ export class InvoiceService {
         const isOwner = invoice.vehicle && userId === (invoice.vehicle as any).ownerId;
         if (!isOwner) throw new Error('Access denied. Only the vehicle owner can pay this invoice');
 
-        return this.invoiceRepository.updateStatus(id, 'PAID' as any);
+        if (invoice.status === InvoiceStatus.PAID) {
+            throw new Error('Invoice is already paid');
+        }
+
+        const updated = await this.invoiceRepository.updateStatus(id, InvoiceStatus.PAYMENT_PENDING as any);
+
+        // Notify via Sockets
+        const booking = await this.prisma.booking.findUnique({
+            where: { id: invoice.bookingId },
+            include: { vehicle: true }
+        });
+        if (booking) {
+            SocketService.emit('invoice_updated', { invoiceId: id, bookingId: invoice.bookingId }, booking.vehicle.ownerId);
+            SocketService.emit('invoice_updated', { invoiceId: id, bookingId: invoice.bookingId }, booking.providerId);
+
+            await this.prisma.notification.create({
+                data: {
+                    userId: booking.providerId,
+                    title: 'Payment Confirmation Required',
+                    message: `The owner has marked the invoice for ${booking.vehicle.make} ${booking.vehicle.model} (${booking.vehicle.licensePlate}) as paid. Please confirm receipt of payment.`,
+                    bookingId: booking.id,
+                },
+            });
+        }
+
+        return updated;
+    }
+
+    /** Confirm payment - sets status to PAID (Provider only) */
+    async confirmPayment(id: string, providerId: string): Promise<Invoice> {
+        const invoice = await this.getInvoiceById(id);
+        if (!invoice) throw new Error('Invoice not found');
+
+        this.verifyInvoiceAccess(invoice, providerId, true);
+
+        if (invoice.status !== InvoiceStatus.PAYMENT_PENDING) {
+            throw new Error('Invoice must be in PAYMENT_PENDING status to be confirmed');
+        }
+
+        const updated = await this.invoiceRepository.updateStatus(id, InvoiceStatus.PAID as any);
+
+        // Notify via Sockets
+        const booking = await this.bookingRepository.findById(invoice.bookingId);
+        if (booking) {
+            const vehicle = await this.prisma.vehicle.findUnique({ where: { id: booking.vehicleId } });
+            if (vehicle) SocketService.emit('invoice_updated', { invoiceId: id }, vehicle.ownerId);
+            SocketService.emit('invoice_updated', { invoiceId: id }, booking.providerId);
+        }
+
+        return updated;
     }
 
     /**

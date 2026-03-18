@@ -7,6 +7,8 @@ export enum InvoiceStatus {
     DRAFT = 'DRAFT',
     /** Invoice has not been paid */
     UNPAID = 'UNPAID',
+    /** Payment has been made by owner, waiting for provider confirmation */
+    PAYMENT_PENDING = 'PAYMENT_PENDING',
     /** Invoice has been paid */
     PAID = 'PAID',
 }

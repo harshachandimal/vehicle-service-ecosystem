@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { invoiceApi, type Invoice } from '../../../../api/invoice.api';
 import { CheckCircle, CreditCard, Receipt, Loader2, Lock } from 'lucide-react';
+import { useAuth } from '../../../../hooks/useAuth';
+import { socketClient } from '../../../../utils/socket';
 
 interface Props {
     bookingId: string;
@@ -9,10 +11,12 @@ interface Props {
 }
 
 export const InvoiceViewer: React.FC<Props> = ({ bookingId, isOwner, onClose }) => {
+    const { user } = useAuth();
     const [invoice, setInvoice] = useState<Invoice | null>(null);
     const [loading, setLoading] = useState(true);
     const [paying, setPaying] = useState(false);
     const [finalizing, setFinalizing] = useState(false);
+    const [confirming, setConfirming] = useState(false);
 
     const fetchInvoice = async () => {
         try {
@@ -27,8 +31,28 @@ export const InvoiceViewer: React.FC<Props> = ({ bookingId, isOwner, onClose }) 
     };
 
     useEffect(() => {
-        fetchInvoice();
-    }, [bookingId]);
+        if (bookingId) {
+            fetchInvoice();
+        }
+
+        if (user?.id) {
+            socketClient.connect();
+            socketClient.join(user.id);
+
+            const handleUpdate = (data: any) => {
+                if (data.bookingId === bookingId || data.invoiceId === invoice?.id) {
+                    console.log('🔄 Invoice update received via socket');
+                    fetchInvoice();
+                }
+            };
+
+            socketClient.on('invoice_updated', handleUpdate);
+
+            return () => {
+                socketClient.off('invoice_updated', handleUpdate);
+            };
+        }
+    }, [bookingId, user?.id, invoice?.id]);
 
     const handlePay = async () => {
         if (!invoice) return;
@@ -54,7 +78,21 @@ export const InvoiceViewer: React.FC<Props> = ({ bookingId, isOwner, onClose }) 
     );
 
     const isPaid = invoice.status === 'PAID';
+    const isPending = invoice.status === 'PAYMENT_PENDING';
     const isDraft = invoice.status === 'DRAFT';
+
+    const handleConfirm = async () => {
+        if (!invoice) return;
+        try {
+            setConfirming(true);
+            await invoiceApi.confirmPayment(invoice.id);
+            await fetchInvoice();
+        } catch (err) {
+            alert('Failed to confirm payment');
+        } finally {
+            setConfirming(false);
+        }
+    };
 
     const handleFinalize = async () => {
         if (!invoice) return;
@@ -78,8 +116,12 @@ export const InvoiceViewer: React.FC<Props> = ({ bookingId, isOwner, onClose }) 
                             <h3 className="text-2xl font-bold flex items-center gap-2 text-gray-900"><Receipt className="text-gray-500" /> Receipt</h3>
                             <p className="text-xs text-gray-500 mt-1 uppercase tracking-wider">ID: {invoice.id.slice(0, 8)}</p>
                         </div>
-                        <span className={`px-3 py-1 rounded-md text-xs font-bold tracking-widest uppercase shadow-sm ${isPaid ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-50 text-red-600 border border-red-100'}`}>
-                            {invoice.status}
+                        <span className={`px-3 py-1 rounded-md text-xs font-bold tracking-widest uppercase shadow-sm ${
+                            isPaid ? 'bg-green-100 text-green-700 border border-green-200' : 
+                            isPending ? 'bg-amber-100 text-amber-700 border border-amber-200' :
+                            'bg-red-50 text-red-600 border border-red-100'
+                        }`}>
+                            {invoice.status.replace('_', ' ')}
                         </span>
                     </div>
 
@@ -104,7 +146,21 @@ export const InvoiceViewer: React.FC<Props> = ({ bookingId, isOwner, onClose }) 
                             {finalizing ? <Loader2 className="animate-spin" size={20} /> : <><Lock size={20} /> Finalise Invoice</>}
                         </button>
                     )}
-                    {!isPaid && !isDraft && isOwner && (
+                    
+                    {isPending && isOwner && (
+                        <div className="w-full py-4 bg-amber-50 text-amber-700 rounded-xl font-medium flex flex-col items-center justify-center gap-2 border border-amber-200 shadow-inner italic text-sm text-center px-4">
+                            <Loader2 className="animate-spin text-amber-500" size={24} />
+                            Waiting for provider to confirm your payment...
+                        </div>
+                    )}
+
+                    {isPending && !isOwner && (
+                        <button onClick={handleConfirm} disabled={confirming} className="w-full py-3.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 font-semibold flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition-all disabled:opacity-70 disabled:cursor-not-allowed">
+                            {confirming ? <Loader2 className="animate-spin" size={20} /> : <><CheckCircle size={20} /> Confirm Payment Received</>}
+                        </button>
+                    )}
+
+                    {!isPaid && !isPending && !isDraft && isOwner && (
                         <button onClick={handlePay} disabled={paying} className="w-full py-3.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 transition-all disabled:opacity-70 disabled:cursor-not-allowed">
                             {paying ? <Loader2 className="animate-spin" size={20} /> : <><CreditCard size={20} /> Pay Now Rs. {Number(invoice.amount).toFixed(2)}</>}
                         </button>

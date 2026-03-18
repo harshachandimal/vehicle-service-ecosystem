@@ -14,42 +14,50 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
   return (
     <div 
       onClick={() => navigate(`/dashboard/owner/vehicles/${vehicle.id}`)}
-      className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5 hover:bg-white/10 hover:border-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 group cursor-pointer flex flex-col h-full"
+      className="bg-[#0f172a]/40 backdrop-blur-xl border border-white/5 rounded-[2rem] overflow-hidden hover:bg-[#1e293b]/60 hover:border-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 group cursor-pointer flex flex-col h-full"
     >
-      <div className="flex items-center gap-3 mb-4">
+      {/* Hero Image Section */}
+      <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
         {vehicle.photoUrl ? (
-          <div className="w-12 h-12 rounded-xl overflow-hidden border border-white/10 shrink-0">
-            <img 
-              src={vehicle.photoUrl.startsWith('http') ? vehicle.photoUrl : `${API_URL}${vehicle.photoUrl}`} 
-              alt={vehicle.model} 
-              className="w-full h-full object-cover" 
-            />
-          </div>
+          <img 
+            src={vehicle.photoUrl.startsWith('http') ? vehicle.photoUrl : `${API_URL}${vehicle.photoUrl}`} 
+            alt={vehicle.model} 
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+          />
         ) : (
-          <div className="p-2.5 bg-blue-500/10 rounded-xl group-hover:bg-blue-500/20 group-hover:scale-110 transition-all shrink-0">
-            <Car className="text-blue-400" size={20} />
+          <div className="w-full h-full flex items-center justify-center bg-blue-600/5 group-hover:bg-blue-600/10 transition-colors">
+            <Car className="text-blue-500/20 group-hover:text-blue-500/40 group-hover:scale-110 transition-all duration-700" size={64} strokeWidth={1} />
           </div>
         )}
-        <div className="min-w-0">
-          <h3 className="text-base font-bold text-white group-hover:text-blue-300 transition-colors truncate">
-            {vehicle.year} {vehicle.make}
-          </h3>
-          <p className="text-slate-500 text-xs font-medium truncate">{vehicle.model}</p>
+        
+        {/* Subtle Overlay Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
+        
+        {/* Year Badge */}
+        <div className="absolute top-4 right-4 px-3 py-1 bg-blue-600/20 backdrop-blur-md border border-white/10 rounded-full">
+            <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">{vehicle.year}</span>
         </div>
       </div>
-      
-      <div className="mt-auto space-y-4">
-        <div className="bg-white/5 p-2.5 rounded-xl border border-white/5 group-hover:bg-blue-500/5 group-hover:border-blue-500/10 transition-all">
-          <div className="flex justify-between items-center">
-            <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Plate</span>
-            <span className="text-xs font-mono text-blue-300/80 font-bold tracking-tighter group-hover:text-blue-300 transition-colors uppercase">{vehicle.licensePlate}</span>
-          </div>
+
+      {/* Content Section */}
+      <div className="p-6 flex flex-col flex-1">
+        <div className="mb-6">
+          <h3 className="text-xl font-black text-white group-hover:text-blue-300 transition-colors tracking-tight leading-tight">
+            {vehicle.make}
+          </h3>
+          <p className="text-slate-500 text-sm font-semibold tracking-tight uppercase tracking-[0.05em]">{vehicle.model}</p>
         </div>
 
-        <button className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold hover:bg-blue-600 hover:text-white transition-all">
-          <Eye size={14} />
-          View Details
-        </button>
+        <div className="mt-auto pt-6 border-t border-white/5 flex items-center justify-between">
+          <div className="flex flex-col">
+             <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Registration</span>
+             <span className="text-sm font-mono text-white/80 group-hover:text-blue-300 transition-colors uppercase font-bold">{vehicle.licensePlate}</span>
+          </div>
+          
+          <div className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-2xl group-hover:bg-blue-600 group-hover:text-white group-hover:rotate-12 group-hover:scale-110 transition-all duration-500 text-slate-500 shadow-xl">
+            <Eye size={20} />
+          </div>
+        </div>
       </div>
     </div>
   );

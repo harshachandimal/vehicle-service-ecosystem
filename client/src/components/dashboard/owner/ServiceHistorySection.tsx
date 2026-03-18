@@ -6,11 +6,13 @@ import type { BookingResponse } from '../../../api/booking.api';
 interface ServiceHistorySectionProps {
   bookings: BookingResponse[];
   onViewInvoice: (id: string) => void;
+  onViewDetails: (id: string) => void;
 }
 
 const ServiceHistorySection: React.FC<ServiceHistorySectionProps> = ({ 
   bookings, 
-  onViewInvoice 
+  onViewInvoice,
+  onViewDetails
 }) => {
   return (
     <section className="space-y-4">
@@ -25,6 +27,7 @@ const ServiceHistorySection: React.FC<ServiceHistorySectionProps> = ({
       <BookingListView 
         bookings={bookings} 
         onViewInvoice={onViewInvoice} 
+        onViewDetails={onViewDetails}
       />
     </section>
   );

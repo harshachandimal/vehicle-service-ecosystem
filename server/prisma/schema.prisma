@@ -42,6 +42,7 @@ enum ServiceCategory {
 enum InvoiceStatus {
   DRAFT
   UNPAID
+  PAYMENT_PENDING
   PAID
 }
 

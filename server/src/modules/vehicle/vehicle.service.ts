@@ -79,7 +79,7 @@ export class VehicleService {
     async updateVehiclePhoto(id: string, ownerId: string, photoUrl: string): Promise<Vehicle> {
         // First check if vehicle exists and belongs to owner
         await this.getVehicleById(id, ownerId);
-        
+
         return this.vehicleRepository.update(id, { photoUrl });
     }
 

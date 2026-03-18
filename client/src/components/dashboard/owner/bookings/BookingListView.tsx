@@ -5,11 +5,12 @@ import BookingRow from './BookingRow';
 interface BookingListViewProps {
     bookings: BookingResponse[];
     onViewInvoice: (bookingId: string) => void;
+    onViewDetails: (bookingId: string) => void;
 }
 
 type TabType = 'ALL' | 'PENDING' | 'ACTIVE' | 'COMPLETED';
 
-const BookingListView: React.FC<BookingListViewProps> = ({ bookings, onViewInvoice }) => {
+const BookingListView: React.FC<BookingListViewProps> = ({ bookings, onViewInvoice, onViewDetails }) => {
     const [activeTab, setActiveTab] = useState<TabType>('ACTIVE');
 
     const filterBookings = (tab: TabType) => {
@@ -67,7 +68,7 @@ const BookingListView: React.FC<BookingListViewProps> = ({ bookings, onViewInvoi
                                 key={booking.id} 
                                 booking={booking} 
                                 onViewInvoice={onViewInvoice}
-                                onViewDetails={(id) => console.log('View details', id)}
+                                onViewDetails={onViewDetails}
                             />
                         ))
                     ) : (

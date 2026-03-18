@@ -105,4 +105,14 @@ invoiceRoutes.patch(
     (req: AuthenticatedRequest, res) => invoiceController.payInvoice(req, res)
 );
 
+/**
+ * PATCH /api/invoices/:id/confirm
+ * Confirm payment for an invoice
+ */
+invoiceRoutes.patch(
+    '/:id/confirm',
+    authorize([UserRole.PROVIDER]),
+    (req: AuthenticatedRequest, res) => invoiceController.confirmPayment(req, res)
+);
+
 export default invoiceRoutes;

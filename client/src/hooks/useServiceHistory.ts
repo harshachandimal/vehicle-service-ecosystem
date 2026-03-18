@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { bookingApi } from '../api/booking.api';
 import type { BookingResponse } from '../api/booking.api';
+import { socketClient } from '../utils/socket';
+import { useAuth } from './useAuth';
 
 export const useServiceHistory = () => {
+  const { user } = useAuth();
   const [history, setHistory] = useState<BookingResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -10,22 +13,14 @@ export const useServiceHistory = () => {
   const fetchHistory = async () => {
     try {
       setLoading(true);
-      setError(null);
-      const bookings = await bookingApi.getMyBookings();
-      
-      // Filter for completed bookings
-      const completedBookings = bookings.filter(
-        (booking) => booking.status === 'COMPLETED'
+      const data = await bookingApi.getMyBookings();
+      // Filter for completed or cancelled bookings for history
+      const historyData = data.filter(booking => 
+        ['COMPLETED', 'CANCELLED', 'REJECTED'].includes(booking.status)
       );
-      
-      // Sort by date (newest first)
-      const sortedHistory = completedBookings.sort((a, b) => 
-        new Date(b.serviceDate).getTime() - new Date(a.serviceDate).getTime()
-      );
-
-      setHistory(sortedHistory);
+      setHistory(historyData);
     } catch (err) {
-      setError('Failed to load service history. Please try again later.');
+      setError('Failed to load service history.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -34,7 +29,25 @@ export const useServiceHistory = () => {
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+
+    if (user?.id) {
+      socketClient.connect();
+      socketClient.join(user.id);
+
+      const handleUpdate = () => {
+        console.log('🔄 Service history update received via socket');
+        fetchHistory();
+      };
+
+      socketClient.on('booking_updated', handleUpdate);
+      socketClient.on('invoice_updated', handleUpdate);
+
+      return () => {
+        socketClient.off('booking_updated', handleUpdate);
+        socketClient.off('invoice_updated', handleUpdate);
+      };
+    }
+  }, [user?.id]);
 
   return {
     history,

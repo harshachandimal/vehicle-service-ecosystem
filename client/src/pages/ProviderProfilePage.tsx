@@ -8,6 +8,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Star, Wrench, ArrowLeft, Phone, FileText } from 'lucide-react';
 import { getProviderById } from '../api/providers.api';
 import type { ProviderDetail } from '../api/providers.api';
+import { useAuth } from '../hooks/useAuth';
 
 const SERVER = import.meta.env.VITE_API_URL?.replace('/api', '') ?? 'http://localhost:3000';
 
@@ -43,6 +44,7 @@ function Skeleton() {
 export default function ProviderProfilePage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [data, setData] = useState<ProviderDetail | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -153,11 +155,23 @@ export default function ProviderProfilePage() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {services.map((s) => (
                                 <div key={s.id} className="bg-white rounded-xl border border-gray-200 p-4 flex items-center justify-between hover:border-primary/40 transition-colors">
-                                    <div>
+                                    <div className="flex-1">
                                         <p className="text-sm font-semibold text-dark">{s.name}</p>
                                         {s.description && <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{s.description}</p>}
+                                        <p className="text-primary font-bold text-sm mt-1">Rs. {s.price.toLocaleString()}</p>
                                     </div>
-                                    <span className="text-primary font-bold text-sm whitespace-nowrap ml-4">Rs. {s.price.toLocaleString()}</span>
+                                    <button
+                                        onClick={() => {
+                                            if (!user) {
+                                                navigate('/login', { state: { returnTo: `/book/${s.id}`, message: 'Please log in to book this service.' } });
+                                            } else {
+                                                navigate(`/book/${s.id}`);
+                                            }
+                                        }}
+                                        className="px-4 py-1.5 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-primary/90 transition-all ml-4"
+                                    >
+                                        Book Now
+                                    </button>
                                 </div>
                             ))}
                         </div>

@@ -22,8 +22,7 @@ import VehicleDetails from './pages/dashboard/owner/VehicleDetails';
 import ServiceHistory from './pages/dashboard/owner/ServiceHistory';
 import BookingDetails from './pages/dashboard/owner/BookingDetails';
 import OwnerProfileSettings from './pages/dashboard/owner/ProfileSettings';
-import BookServicePage from './pages/dashboard/owner/BookServicePage';
-import CreateBookingDashboardPage from './pages/dashboard/owner/CreateBookingDashboardPage';
+import CreateBookingPage from './pages/bookings/CreateBookingPage';
 
 /**
  * Main application component with routing and authentication provider
@@ -52,8 +51,6 @@ function App() {
           <Route path="/dashboard/owner/history" element={<ServiceHistory />} />
           <Route path="/dashboard/owner/bookings/:id" element={<BookingDetails />} />
           <Route path="/dashboard/owner/settings" element={<OwnerProfileSettings />} />
-          <Route path="/dashboard/owner/book" element={<BookServicePage />} />
-          <Route path="/dashboard/owner/book/:serviceId" element={<CreateBookingDashboardPage />} />
 
           {/* Main routes - with navbar/footer */}
           <Route path="/*" element={
@@ -64,9 +61,10 @@ function App() {
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/providers" element={<ProvidersPage />} />
                   <Route path="/providers/:id" element={<ProviderProfilePage />} />
-                  <Route path="/services" element={<ServicesPage />} />
-                  <Route path="/about" element={<AboutPage />} />
-                  <Route path="/contact" element={<AboutPage />} />
+                   <Route path="/services" element={<ServicesPage />} />
+                   <Route path="/book/:serviceId" element={<CreateBookingPage />} />
+                   <Route path="/about" element={<AboutPage />} />
+                   <Route path="/contact" element={<AboutPage />} />
                 </Routes>
               </main>
               <Footer />

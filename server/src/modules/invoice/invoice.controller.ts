@@ -114,6 +114,21 @@ export class InvoiceController {
     }
 
     /**
+     * Confirm payment for an invoice
+     */
+    async confirmPayment(req: AuthenticatedRequest, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+            const providerId = req.user!.userId;
+
+            const invoice = await this.invoiceService.confirmPayment(id, providerId);
+            res.status(200).json(invoice);
+        } catch (error: any) {
+            this.handleError(res, error);
+        }
+    }
+
+    /**
      * Get all invoices for the authenticated user
      */
     async getMyInvoices(req: AuthenticatedRequest, res: Response): Promise<void> {
