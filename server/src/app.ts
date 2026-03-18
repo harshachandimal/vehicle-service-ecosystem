@@ -10,6 +10,7 @@ import serviceRoutes from './modules/provider/service.routes';
 import invoiceRoutes from './modules/invoice/invoice.routes';
 import contactRoutes from './modules/contact/contact.routes';
 import profileRoutes from './modules/profile/profile.routes';
+import notificationRoutes from './modules/notification/notification.routes';
 
 /**
  * Creates and configures the Express application
@@ -63,6 +64,7 @@ function configureRoutes(app: Application): void {
     app.use('/api/invoices', invoiceRoutes);
     app.use('/api/contact', contactRoutes);
     app.use('/api/profile', profileRoutes);
+    app.use('/api/notifications', notificationRoutes);
 }
 
 /**

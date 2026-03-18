@@ -63,6 +63,7 @@ model User {
   vehicles             Vehicle[]        // One Owner -> Many Vehicles
   providerBookings     Booking[]        // Bookings where user is provider
   providerProfile      ProviderProfile? // Provider's business profile
+  notifications        Notification[]   // Notifications received by the user
 
   @@map("users")
 }
@@ -171,4 +172,19 @@ model ContactMessage {
   createdAt DateTime @default(now())
 
   @@map("contact_messages")
+}
+
+/// Notification model
+/// Stores in-app notifications sent to providers when a booking is made
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String            // The user (provider) who receives the notification
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  bookingId String?           // Optional link to the related booking
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
 }

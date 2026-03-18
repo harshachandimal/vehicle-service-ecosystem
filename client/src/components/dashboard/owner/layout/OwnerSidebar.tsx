@@ -1,6 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Car, History, User, LogOut, PlusCircle } from 'lucide-react';
 import { useAuth } from '../../../../hooks/useAuth';
+import NotificationBell from '../../provider/layout/NotificationBell';
 
 export default function OwnerSidebar() {
     const { logout } = useAuth();
@@ -26,8 +27,13 @@ export default function OwnerSidebar() {
         <aside className="w-64 bg-slate-900 border-r border-slate-800 shadow-[4px_0_24px_rgba(0,0,0,0.1)] hidden md:flex flex-col justify-between z-10 sticky top-0 h-screen">
             <div>
                 <div className="p-8">
-                    <h2 className="text-2xl font-black tracking-tight bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">AutoFix</h2>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Owner Portal</p>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h2 className="text-2xl font-black tracking-tight bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">AutoFix</h2>
+                            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Owner Portal</p>
+                        </div>
+                        <NotificationBell bookingUrlPrefix="/dashboard/owner/bookings" />
+                    </div>
                 </div>
                 <nav className="flex flex-col gap-2 px-4 mt-6">
                     {navLinks.map((link) => (

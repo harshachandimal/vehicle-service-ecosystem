@@ -44,7 +44,24 @@ export class BookingService {
         if (!provider || provider.role !== 'PROVIDER') {
             throw new Error('Invalid provider or user is not a provider');
         }
-        return this.bookingRepository.create(data);
+        const booking = await this.bookingRepository.create(data);
+
+        // Notify the provider about the new booking request
+        try {
+            await this.prisma.notification.create({
+                data: {
+                    userId: data.providerId,
+                    title: 'New Booking Request',
+                    message: `You have a new booking request for a ${vehicle.year} ${vehicle.make} ${vehicle.model} (${vehicle.licensePlate}).`,
+                    bookingId: booking.id,
+                },
+            });
+        } catch (notificationError) {
+            // Non-critical: log but don't fail the booking creation
+            console.error('Failed to create booking notification:', notificationError);
+        }
+
+        return booking;
     }
 
     /**
@@ -86,7 +103,38 @@ export class BookingService {
             throw new Error('Access denied. You are not assigned to this booking');
         }
         validateStatusTransition(booking.status, newStatus);
-        return this.bookingRepository.updateStatus(bookingId, newStatus);
+        const updated = await this.bookingRepository.updateStatus(bookingId, newStatus);
+
+        // Notify the vehicle owner about the status change
+        try {
+            const rawBooking = await this.prisma.booking.findUnique({
+                where: { id: bookingId },
+                include: { vehicle: true },
+            });
+            if (rawBooking) {
+                const statusLabels: Record<string, string> = {
+                    ACCEPTED: 'accepted',
+                    REJECTED: 'rejected',
+                    IN_PROGRESS: 'started working on',
+                    COMPLETED: 'completed',
+                    CANCELLED: 'cancelled',
+                };
+                const statusLabel = statusLabels[newStatus] ?? newStatus.toLowerCase();
+                await this.prisma.notification.create({
+                    data: {
+                        userId: rawBooking.vehicle.ownerId,
+                        title: `Booking ${newStatus.charAt(0) + newStatus.slice(1).toLowerCase()}`,
+                        message: `Your provider has ${statusLabel} the booking for your ${rawBooking.vehicle.make} ${rawBooking.vehicle.model}.`,
+                        bookingId,
+                    },
+                });
+            }
+        } catch (notificationError) {
+            // Non-critical: log but don't fail the status update
+            console.error('Failed to create owner notification:', notificationError);
+        }
+
+        return updated;
     }
 
     /**
