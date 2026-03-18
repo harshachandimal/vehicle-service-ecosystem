@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { AuthenticatedRequest } from '../../common/middleware/auth.middleware';
 import { BookingService } from './booking.service';
 import { BookingRepository } from './booking.repository';
-import { CreateBookingDTO, UpdateStatusDTO } from '../../types/booking.types';
+import { CreateBookingDTO, UpdateStatusDTO, UpdateServiceRecordDTO } from '../../types/booking.types';
 
 // Initialize repositories and services Dependencies Inversion
 const bookingRepository = new BookingRepository();
@@ -119,6 +119,30 @@ export async function getBookingHandler(
     } catch (error) {
         const msg = error instanceof Error ? error.message : 'Failed to fetch booking';
         const statusCode = msg.includes('Access denied') ? 403 : 500;
+        res.status(statusCode).json({ error: msg });
+    }
+}
+
+/**
+ * Update service record (mileage + note) - PATCH /api/bookings/:id/service-record (Provider only)
+ * @param {AuthenticatedRequest} req @param {Response} res
+ */
+export async function updateServiceRecordHandler(
+    req: AuthenticatedRequest, res: Response
+): Promise<void> {
+    try {
+        const providerId = req.user!.userId;
+        const bookingId = req.params.id;
+        const { currentMileage, serviceNote }: UpdateServiceRecordDTO = req.body;
+        if (!currentMileage || typeof currentMileage !== 'number') {
+            res.status(400).json({ error: 'currentMileage is required and must be a number' });
+            return;
+        }
+        const booking = await bookingService.updateServiceRecord(bookingId, providerId, currentMileage, serviceNote);
+        res.status(200).json(booking);
+    } catch (error) {
+        const msg = error instanceof Error ? error.message : 'Failed to update service record';
+        const statusCode = msg.includes('Access denied') ? 403 : 400;
         res.status(statusCode).json({ error: msg });
     }
 }

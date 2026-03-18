@@ -13,6 +13,7 @@ import { BookingDetailsVehicle } from '../../../components/dashboard/owner/booki
 import { BookingDetailsProvider } from '../../../components/dashboard/owner/bookings/details/BookingDetailsProvider';
 import { BookingDetailsDescription } from '../../../components/dashboard/owner/bookings/details/BookingDetailsDescription';
 import { BookingDetailsInvoice } from '../../../components/dashboard/owner/bookings/details/BookingDetailsInvoice';
+import { BookingDetailsServiceRecord } from '../../../components/dashboard/owner/bookings/details/BookingDetailsServiceRecord';
 
 const BookingDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -80,6 +81,13 @@ const BookingDetails: React.FC = () => {
             </div>
 
             <BookingDetailsDescription description={booking.description} />
+
+            {booking.status === 'COMPLETED' && (
+              <BookingDetailsServiceRecord
+                currentMileage={booking.currentMileage}
+                serviceNote={booking.serviceNote}
+              />
+            )}
           </div>
 
           {booking.invoice && (

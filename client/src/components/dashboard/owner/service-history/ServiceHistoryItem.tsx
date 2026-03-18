@@ -20,7 +20,7 @@ const ServiceHistoryItem: React.FC<ServiceHistoryItemProps> = ({ booking, onNavi
     <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 hover:border-blue-500/30 transition-all group">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
         {/* Service Info Grid */}
-        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Date & Vehicle Column */}
           <div className="flex items-start gap-4 pr-4">
             <div className="p-3 bg-blue-600/10 rounded-xl text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-all shrink-0">
@@ -49,6 +49,14 @@ const ServiceHistoryItem: React.FC<ServiceHistoryItemProps> = ({ booking, onNavi
               <Wrench size={14} className="text-blue-500 shrink-0" />
               <span className="truncate">{booking.service?.name || booking.description}</span>
             </div>
+          </div>
+
+          {/* Mileage Column */}
+          <div>
+            <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Mileage</p>
+            <p className="text-sm font-bold text-white">
+              {booking.currentMileage ? `${booking.currentMileage.toLocaleString()} km` : 'N/A'}
+            </p>
           </div>
 
           {/* Amount Column */}

@@ -8,6 +8,7 @@ import {
     getOwnerBookingsHandler,
     updateStatusHandler,
     getBookingHandler,
+    updateServiceRecordHandler,
 } from './booking.controller';
 
 /**
@@ -72,5 +73,16 @@ bookingRoutes.patch('/:id/status', authorize([UserRole.PROVIDER]), updateStatusH
  * Retrieve a specific booking by ID
  */
 bookingRoutes.get('/:id', authorize([UserRole.OWNER, UserRole.PROVIDER]), getBookingHandler);
+
+/**
+ * PATCH /api/bookings/:id/service-record
+ * Update mileage and service note for a completed booking
+ *
+ * @access Provider only (must be assigned to booking)
+ * @param {string} id - Booking ID
+ * @body {UpdateServiceRecordDTO} - currentMileage (required), serviceNote (optional)
+ * @returns {Booking} Updated booking object
+ */
+bookingRoutes.patch('/:id/service-record', authorize([UserRole.PROVIDER]), updateServiceRecordHandler);
 
 export default bookingRoutes;

@@ -178,4 +178,31 @@ export class BookingService {
 
         return booking;
     }
+
+    /**
+     * Update service record fields (mileage + note) for a completed booking
+     * Only the assigned provider can update; booking must be COMPLETED
+     *
+     * @param {string} bookingId - The booking ID to update
+     * @param {string} providerId - The requesting provider's user ID
+     * @param {number} currentMileage - Vehicle mileage at time of service
+     * @param {string|undefined} serviceNote - Work description
+     * @returns {Promise<Booking>} The updated booking
+     */
+    async updateServiceRecord(
+        bookingId: string, providerId: string, currentMileage: number, serviceNote?: string
+    ): Promise<Booking> {
+        const booking = await this.bookingRepository.findById(bookingId);
+        if (!booking) throw new Error('Booking not found');
+        if (booking.providerId !== providerId) {
+            throw new Error('Access denied. You are not assigned to this booking');
+        }
+        if (booking.status !== BookingStatus.COMPLETED) {
+            throw new Error('Service record can only be added to completed bookings');
+        }
+        if (!currentMileage || currentMileage <= 0) {
+            throw new Error('Current mileage must be a positive number');
+        }
+        return this.bookingRepository.updateServiceRecord(bookingId, currentMileage, serviceNote);
+    }
 }

@@ -94,10 +94,12 @@ model Booking {
   vehicleId   String
   providerId  String
   serviceId   String?          // Optional link to a specific ProviderService
-  timeSlot    String?          // e.g. "10:00 AM"
-  description String
-  serviceDate DateTime
-  status      BookingStatus    @default(PENDING)
+  timeSlot       String?          // e.g. "10:00 AM"
+  description    String
+  serviceDate    DateTime
+  status         BookingStatus    @default(PENDING)
+  currentMileage Int?             // Mileage recorded at service time
+  serviceNote    String?          // Short description of work done by provider
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   vehicle     Vehicle          @relation(fields: [vehicleId], references: [id], onDelete: Cascade)

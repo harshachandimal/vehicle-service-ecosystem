@@ -3,6 +3,7 @@ import { Receipt } from 'lucide-react';
 import BookingActions from '../BookingActions';
 import { GenerateInvoiceModal } from '../../invoices/GenerateInvoiceModal';
 import { InvoiceViewer } from '../../../shared/invoices/InvoiceViewer';
+import { ServiceRecordModal } from '../ServiceRecordModal';
 import { type BookingResponse } from '../../../../../api/booking.api';
 
 interface Props {
@@ -16,8 +17,14 @@ interface Props {
 }
 
 export const ProviderBookingFooter: React.FC<Props> = ({ booking, status, isProvider, isOwner, canStartService, onStatusUpdate, onInvoiceSuccess }) => {
+    const [isServiceRecordOpen, setIsServiceRecordOpen] = useState(false);
     const [isGenerateOpen, setIsGenerateOpen] = useState(false);
     const [isViewerOpen, setIsViewerOpen] = useState(false);
+
+    // Called after service record is saved — opens the invoice modal directly
+    const handleServiceRecordSuccess = () => {
+        setIsGenerateOpen(true);
+    };
 
     return (
         <div className="border-t border-slate-100 pt-8 mt-auto flex flex-col md:flex-row gap-4 items-center justify-end">
@@ -28,10 +35,10 @@ export const ProviderBookingFooter: React.FC<Props> = ({ booking, status, isProv
             <div className="flex w-full md:w-auto gap-3">
                 {status === 'COMPLETED' && isProvider && (!booking.invoice || booking.invoice.status === 'DRAFT') && (
                     <button
-                        onClick={() => setIsGenerateOpen(true)}
+                        onClick={() => booking.invoice ? setIsGenerateOpen(true) : setIsServiceRecordOpen(true)}
                         className="flex-1 md:flex-none px-6 bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 py-2.5 rounded-xl font-semibold transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-2"
                     >
-                        <Receipt size={18} /> {booking.invoice ? "Edit Invoice" : "Create Invoice"}
+                        <Receipt size={18} /> {booking.invoice ? 'Edit Invoice' : 'Create Invoice'}
                     </button>
                 )}
                 {status === 'COMPLETED' && booking.invoice && (
@@ -44,6 +51,17 @@ export const ProviderBookingFooter: React.FC<Props> = ({ booking, status, isProv
                 )}
             </div>
 
+            {/* Step 1: Service Record Modal (mandatory before invoice) */}
+            <ServiceRecordModal
+                isOpen={isServiceRecordOpen}
+                onClose={() => setIsServiceRecordOpen(false)}
+                bookingId={booking.id}
+                existingMileage={booking.currentMileage}
+                existingNote={booking.serviceNote}
+                onSuccess={handleServiceRecordSuccess}
+            />
+
+            {/* Step 2: Invoice Modal (opens after service record is saved) */}
             <GenerateInvoiceModal 
                 isOpen={isGenerateOpen} onClose={() => setIsGenerateOpen(false)} 
                 bookingId={booking.id} invoiceId={booking.invoice?.id} onSuccess={onInvoiceSuccess} 

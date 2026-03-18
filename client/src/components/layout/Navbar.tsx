@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { LogOut } from 'lucide-react';
 
 /**
  * Main navigation bar component with branding and navigation links
@@ -42,9 +43,10 @@ export default function Navbar() {
                             </Link>
                             <button 
                                 onClick={logout}
-                                className="text-dark hover:text-primary transition-colors font-medium text-sm"
+                                className="flex items-center gap-2 px-4 py-2 text-dark hover:text-red-600 hover:bg-red-600/10 border border-slate-200 hover:border-red-200 rounded-xl transition-all duration-300 font-semibold text-sm shadow-sm hover:shadow-md active:scale-95"
                             >
-                                Log Out
+                                <LogOut size={16} />
+                                <span>Log Out</span>
                             </button>
                         </>
                     ) : (

@@ -64,12 +64,24 @@ export class BookingRepository {
         return this.mapToBooking(booking);
     }
 
+    /** @param {string} id @param {number} currentMileage @param {string|undefined} serviceNote @returns {Promise<Booking>} Updated booking */
+    async updateServiceRecord(id: string, currentMileage: number, serviceNote?: string): Promise<Booking> {
+        const booking = await this.prisma.booking.update({
+            where: { id },
+            data: { currentMileage, serviceNote: serviceNote ?? null },
+        });
+        return this.mapToBooking(booking);
+    }
+
     private mapToBooking(b: any): Booking {
         return {
             id: b.id, vehicleId: b.vehicleId, providerId: b.providerId,
             serviceId: b.serviceId, timeSlot: b.timeSlot,
             description: b.description, serviceDate: b.serviceDate,
-            status: b.status as BookingStatus, createdAt: b.createdAt, updatedAt: b.updatedAt,
+            status: b.status as BookingStatus,
+            currentMileage: b.currentMileage ?? null,
+            serviceNote: b.serviceNote ?? null,
+            createdAt: b.createdAt, updatedAt: b.updatedAt,
         };
     }
 

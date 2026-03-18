@@ -41,6 +41,8 @@ export interface BookingResponse {
         status: string;
         amount?: string;
     };
+    currentMileage?: number | null;
+    serviceNote?: string | null;
 }
 
 export const bookingApi = {
@@ -85,6 +87,17 @@ export const bookingApi = {
      */
     updateBookingStatus: async (id: string, status: string): Promise<BookingResponse> => {
         const response = await api.patch<BookingResponse>(`/api/bookings/${id}/status`, { status });
+        return response.data;
+    },
+
+    /**
+     * Update the service record (mileage + note) for a completed booking (Provider only)
+     * @param id - Booking ID
+     * @param currentMileage - Vehicle mileage at time of service
+     * @param serviceNote - Optional short description of work done
+     */
+    updateServiceRecord: async (id: string, currentMileage: number, serviceNote?: string): Promise<BookingResponse> => {
+        const response = await api.patch<BookingResponse>(`/api/bookings/${id}/service-record`, { currentMileage, serviceNote });
         return response.data;
     },
 };

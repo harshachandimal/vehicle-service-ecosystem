@@ -38,6 +38,10 @@ export interface Booking {
     serviceDate: Date;
     /** Current status of the booking */
     status: BookingStatus;
+    /** Mileage of the vehicle recorded at the time of service */
+    currentMileage?: number | null;
+    /** Short description of work performed by the provider */
+    serviceNote?: string | null;
     /** Timestamp when the booking was created */
     createdAt: Date;
     /** Timestamp when the booking was last updated */
@@ -68,6 +72,16 @@ export interface CreateBookingDTO {
 export interface UpdateStatusDTO {
     /** New status to transition to */
     status: BookingStatus;
+}
+
+/**
+ * DTO for updating the service record of a completed booking
+ */
+export interface UpdateServiceRecordDTO {
+    /** Current mileage of the vehicle at the time of service */
+    currentMileage: number;
+    /** Short description of what work was done */
+    serviceNote?: string;
 }
 
 /**
