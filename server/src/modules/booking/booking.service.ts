@@ -3,6 +3,7 @@ import { Booking, BookingStatus, CreateBookingDTO, BookingWithDetails } from '..
 import { validateStatusTransition } from '../../utils/booking-status.util';
 import { PrismaService } from '../../common/prisma.service';
 import { SocketService } from '../../common/socket.service';
+import { isServiceTimePassed } from '../../utils/date.util';
 
 /**
  * Booking Service
@@ -45,6 +46,11 @@ export class BookingService {
         if (!provider || provider.role !== 'PROVIDER') {
             throw new Error('Invalid provider or user is not a provider');
         }
+
+        if (isServiceTimePassed(data.serviceDate, data.timeSlot)) {
+            throw new Error('Cannot book a timeslot that has already passed');
+        }
+
         const booking = await this.bookingRepository.create(data);
 
         // Notify via Sockets

@@ -6,6 +6,7 @@ import DateTimeSelection from '../../components/bookings/DateTimeSelection';
 import BookingNotes from '../../components/bookings/BookingNotes';
 import BookingSuccess from '../../components/bookings/BookingSuccess';
 import { useCreateBooking } from '../../hooks/useCreateBooking';
+import { isServiceTimePassed } from '../../utils/date.util';
 
 // Time slots available for booking
 const TIME_SLOTS = [
@@ -32,6 +33,11 @@ export default function CreateBookingPage() {
         setNotes,
         handleSubmit
     } = useCreateBooking(serviceId);
+
+    // Filter time slots if the selected date is today
+    const availableTimeSlots = selectedDate 
+        ? TIME_SLOTS.filter(slot => !isServiceTimePassed(selectedDate, slot))
+        : TIME_SLOTS;
 
     if (isLoading) {
         return (
@@ -106,7 +112,7 @@ export default function CreateBookingPage() {
                                     onDateChange={setSelectedDate}
                                     selectedTimeSlot={selectedTimeSlot}
                                     onTimeSlotChange={setSelectedTimeSlot}
-                                    timeSlots={TIME_SLOTS}
+                                    timeSlots={availableTimeSlots}
                                 />
 
                                 <BookingNotes
