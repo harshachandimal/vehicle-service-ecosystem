@@ -61,10 +61,9 @@ function App() {
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/providers" element={<ProvidersPage />} />
                   <Route path="/providers/:id" element={<ProviderProfilePage />} />
-                   <Route path="/services" element={<ServicesPage />} />
-                   <Route path="/book/:serviceId" element={<CreateBookingPage />} />
-                   <Route path="/about" element={<AboutPage />} />
-                   <Route path="/contact" element={<AboutPage />} />
+                  <Route path="/services" element={<ServicesPage />} />
+                  <Route path="/book/:serviceId" element={<CreateBookingPage />} />
+                  <Route path="/about" element={<AboutPage />} />
                 </Routes>
               </main>
               <Footer />
