@@ -1,7 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Wrench, User, LogOut, Home } from 'lucide-react';
 import { useAuth } from '../../../../hooks/useAuth';
-import NotificationBell from './NotificationBell';
+import NotificationBell from '../../shared/common/NotificationBell';
 
 export default function ProviderSidebar() {
     const { logout } = useAuth();

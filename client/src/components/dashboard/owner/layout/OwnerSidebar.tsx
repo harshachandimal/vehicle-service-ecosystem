@@ -1,7 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Car, History, User, LogOut, Home } from 'lucide-react';
 import { useAuth } from '../../../../hooks/useAuth';
-import NotificationBell from '../../provider/layout/NotificationBell';
+import NotificationBell from '../../shared/common/NotificationBell';
 
 export default function OwnerSidebar() {
     const { logout } = useAuth();
